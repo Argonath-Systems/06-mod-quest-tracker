@@ -1,5 +1,6 @@
 package com.argonathsystems.mods.questtrackerui.accessibility;
 
+import java.util.Locale;
 import java.util.Objects;
 
 /**
@@ -236,7 +237,7 @@ public final class AccessibilitySettings {
     
     @Override
     public String toString() {
-        return String.format(
+        return String.format(Locale.ROOT,
             "AccessibilitySettings[highContrast=%s, colorblind=%s, screenReader=%s, textScale=%.1f]",
             highContrastMode, colorblindMode, screenReaderSupport, textScale);
     }

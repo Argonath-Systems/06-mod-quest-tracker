@@ -22,9 +22,9 @@ class QuestWaypointTest {
         assertThat(waypoint.position()).isEqualTo(location);
         assertThat(waypoint.label()).isEqualTo("Test Location");
         assertThat(waypoint.style()).isEqualTo(WaypointStyle.DEFAULT);
-        assertThat(waypoint.showOnMap()).isTrue();
-        assertThat(waypoint.showOnCompass()).isTrue();
-        assertThat(waypoint.showOnScreen()).isTrue();
+        assertThat(waypoint.showCompass()).isTrue();
+        assertThat(waypoint.showWorldMarker()).isTrue();
+        assertThat(waypoint.showDistance()).isTrue();
     }
     
     @Test
@@ -53,14 +53,11 @@ class QuestWaypointTest {
     @Test
     @DisplayName("Should format distance text")
     void shouldFormatDistanceText() {
-        QuestWaypoint waypoint = QuestWaypoint.of("wp1", 
-            new LocationData("world", 0, 0, 0), "Test");
-        
-        assertThat(waypoint.formatDistance(25.5)).isEqualTo("26m");
-        assertThat(waypoint.formatDistance(150.0)).isEqualTo("150m");
-        assertThat(waypoint.formatDistance(999.0)).isEqualTo("999m");
-        assertThat(waypoint.formatDistance(1000.0)).isEqualTo("1.0km");
-        assertThat(waypoint.formatDistance(1500.0)).isEqualTo("1.5km");
+        assertThat(QuestWaypoint.formatDistance(25.5)).isEqualTo("26m");
+        assertThat(QuestWaypoint.formatDistance(150.0)).isEqualTo("150m");
+        assertThat(QuestWaypoint.formatDistance(999.0)).isEqualTo("999m");
+        assertThat(QuestWaypoint.formatDistance(1000.0)).isEqualTo("1.0km");
+        assertThat(QuestWaypoint.formatDistance(1500.0)).isEqualTo("1.5km");
     }
     
     @Test

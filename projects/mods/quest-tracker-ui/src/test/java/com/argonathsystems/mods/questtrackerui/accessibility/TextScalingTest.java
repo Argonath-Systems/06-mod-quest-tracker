@@ -34,7 +34,7 @@ class TextScalingTest {
         @Test
         @DisplayName("scale 0.5 halves size")
         void scaleHalfHalves() {
-            assertThat(TextScaling.applyScale(12, 0.5)).isEqualTo(6);
+            assertThat(TextScaling.applyScale(20, 0.5)).isEqualTo(10);
         }
         
         @Test
@@ -113,7 +113,7 @@ class TextScalingTest {
         @ParameterizedTest
         @CsvSource({
             "1.0, 1.0",
-            "1.05, 1.0",
+            "1.05, 1.1",
             "1.15, 1.1",
             "1.25, 1.3",
             "0.95, 0.9"

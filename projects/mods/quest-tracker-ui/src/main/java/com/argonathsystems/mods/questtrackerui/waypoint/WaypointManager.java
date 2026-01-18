@@ -149,7 +149,7 @@ public class WaypointManager {
         return activeWaypoints.stream()
             .filter(wp -> {
                 double distance = playerLocation.distance(wp.position());
-                return distance >= 0 && distance <= config.maxRenderDistance();
+                return distance >= 0 && distance <= config.maxDistance();
             })
             .toList();
     }

@@ -89,7 +89,7 @@ public class QuestNotifications {
             .duration(5000)
             .sound("quest_complete")
             .rewards(rewards)
-            .confetti(true)
+            .playConfetti(true)
             .build();
         
         renderer.show(toast);
@@ -189,6 +189,7 @@ public class QuestNotifications {
             case GUILD -> "textures/icons/sword.png";
             case DAILY -> "textures/icons/sun.png";
             case WEEKLY -> "textures/icons/calendar.png";
+            case EVENT -> "textures/icons/star.png";
         };
     }
     

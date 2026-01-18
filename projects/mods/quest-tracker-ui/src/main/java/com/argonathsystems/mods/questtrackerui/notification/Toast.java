@@ -11,20 +11,20 @@ import java.util.List;
  * @param message Toast message
  * @param icon Icon identifier
  * @param style Visual style
- * @param durationMs Display duration in milliseconds
+ * @param duration Display duration in milliseconds
  * @param sound Sound to play (null for no sound)
  * @param rewards Rewards to display (empty if none)
- * @param showConfetti Whether to show confetti effect
+ * @param playConfetti Whether to show confetti effect
  */
 public record Toast(
     String title,
     String message,
     String icon,
     ToastStyle style,
-    int durationMs,
+    int duration,
     String sound,
     List<Reward> rewards,
-    boolean showConfetti
+    boolean playConfetti
 ) {
     
     /**
@@ -65,10 +65,10 @@ public record Toast(
         private String message = "";
         private String icon = null;
         private ToastStyle style = ToastStyle.INFO;
-        private int durationMs = 3000;
+        private int duration = 3000;
         private String sound = null;
         private List<Reward> rewards = List.of();
-        private boolean showConfetti = false;
+        private boolean playConfetti = false;
         
         public Builder title(String title) {
             this.title = title;
@@ -90,8 +90,8 @@ public record Toast(
             return this;
         }
         
-        public Builder duration(int durationMs) {
-            this.durationMs = durationMs;
+        public Builder duration(int duration) {
+            this.duration = duration;
             return this;
         }
         
@@ -105,13 +105,13 @@ public record Toast(
             return this;
         }
         
-        public Builder confetti(boolean showConfetti) {
-            this.showConfetti = showConfetti;
+        public Builder playConfetti(boolean playConfetti) {
+            this.playConfetti = playConfetti;
             return this;
         }
         
         public Toast build() {
-            return new Toast(title, message, icon, style, durationMs, sound, rewards, showConfetti);
+            return new Toast(title, message, icon, style, duration, sound, rewards, playConfetti);
         }
     }
 }

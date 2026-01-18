@@ -19,7 +19,7 @@ public class ProviderRegistry {
     private final Map<String, QuestDataProvider> providers;
     private final List<ProviderChangeListener> listeners;
     
-    private ProviderRegistry() {
+    protected ProviderRegistry() {
         this.providers = new ConcurrentHashMap<>();
         this.listeners = new ArrayList<>();
     }

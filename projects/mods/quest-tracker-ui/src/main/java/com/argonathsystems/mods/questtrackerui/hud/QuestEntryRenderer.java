@@ -116,6 +116,7 @@ public class QuestEntryRenderer {
             case GUILD -> theme.colors().questGuild();
             case DAILY -> theme.colors().questDaily();
             case WEEKLY -> theme.colors().questWeekly();
+            case EVENT -> theme.colors().questMain(); // Use main color for events
         };
         return theme.colors().parseHex(hexColor);
     }

@@ -81,6 +81,21 @@ public record Reward(
         }
         return String.valueOf(num);
     }
+
+    public String formattedAmount() {
+        return formatted();
+    }
+
+    public int color() {
+        return switch (type) {
+            case XP -> 0xFFA020F0; // Purple
+            case GOLD -> 0xFFFFD700; // Gold
+            case ITEM -> 0xFFFFFFFF; // White
+            case REPUTATION -> 0xFF00FF00; // Green
+            case SKILL_POINT -> 0xFF0000FF; // Blue
+            case OTHER -> 0xFFCCCCCC; // Grey
+        };
+    }
     
     /**
      * Type of quest reward.

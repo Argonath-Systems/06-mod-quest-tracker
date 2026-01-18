@@ -74,7 +74,7 @@ public class ToastRenderer {
             ActiveToast active = iter.next();
             long elapsed = now - active.startTime;
             
-            if (elapsed > active.toast.durationMs() + ANIMATION_DURATION_MS) {
+            if (elapsed > active.toast.duration() + ANIMATION_DURATION_MS) {
                 iter.remove();
             }
         }
@@ -102,7 +102,7 @@ public class ToastRenderer {
         
         for (ActiveToast active : activeToasts) {
             long elapsed = now - active.startTime;
-            float animation = calculateAnimation(elapsed, active.toast.durationMs());
+            float animation = calculateAnimation(elapsed, active.toast.duration());
             
             int y = startY + (yOffset * direction);
             renderToast(ctx, active.toast, startX, y, animation);
@@ -152,7 +152,7 @@ public class ToastRenderer {
         ctx.fillRoundedRect(x, y, TOAST_WIDTH, TOAST_HEIGHT, 8, bgColor);
         
         // Accent bar
-        int accentColor = (alpha << 24) | (toast.style().colorArgb() & 0x00FFFFFF);
+        int accentColor = (alpha << 24) | (toast.style().primaryColor() & 0x00FFFFFF);
         ctx.fillRect(x, y, 4, TOAST_HEIGHT, accentColor);
         
         // Icon

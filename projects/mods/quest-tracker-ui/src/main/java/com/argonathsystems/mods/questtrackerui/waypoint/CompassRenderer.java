@@ -45,7 +45,7 @@ public class CompassRenderer {
      * @param playerYaw Player's current horizontal rotation
      */
     public void render(RenderContext ctx, QuestWaypoint waypoint, LocationData playerLocation, float playerYaw) {
-        if (!config.enabled() || !config.showCompass() || !waypoint.showCompass()) {
+        if (!config.enabled() || !config.showOnScreen() || !waypoint.showCompass()) {
             return;
         }
         
@@ -58,7 +58,7 @@ public class CompassRenderer {
         
         // Calculate distance
         double distance = playerLocation.distance(wpPos);
-        if (distance > config.maxRenderDistance()) {
+        if (distance > config.maxDistance()) {
             return;
         }
         

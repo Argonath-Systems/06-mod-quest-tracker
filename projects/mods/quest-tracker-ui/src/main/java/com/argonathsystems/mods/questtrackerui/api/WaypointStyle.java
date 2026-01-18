@@ -8,44 +8,48 @@ public enum WaypointStyle {
     /**
      * Standard waypoint marker.
      */
-    DEFAULT("default", "Default"),
+    DEFAULT("default", "Default", "waypoint_default", 0xFFFFFFFF),
     
     /**
      * Objective-specific icon.
      */
-    OBJECTIVE("objective", "Objective"),
+    OBJECTIVE("objective", "Objective", "waypoint_objective", 0xFFFFA500),
     
     /**
      * NPC head/icon style.
      */
-    NPC("npc", "NPC"),
+    NPC("npc", "NPC", "waypoint_npc", 0xFF00FF00),
     
     /**
      * Location flag style.
      */
-    LOCATION("location", "Location"),
+    LOCATION("location", "Location", "waypoint_location", 0xFF0000FF),
     
     /**
      * Danger/warning style (skull icon).
      */
-    DANGER("danger", "Danger"),
+    DANGER("danger", "Danger", "waypoint_danger", 0xFFFF4444),
     
     /**
      * Quest giver style.
      */
-    QUEST_GIVER("quest_giver", "Quest Giver"),
+    QUEST_GIVER("quest_giver", "Quest Giver", "waypoint_quest_giver", 0xFFFFD700),
     
     /**
      * Quest turn-in style.
      */
-    QUEST_TURNIN("quest_turnin", "Turn-In");
+    QUEST_TURNIN("quest_turnin", "Turn-In", "waypoint_quest_turnin", 0xFF90EE90);
     
     private final String id;
     private final String displayName;
+    private final String iconName;
+    private final int color;
     
-    WaypointStyle(String id, String displayName) {
+    WaypointStyle(String id, String displayName, String iconName, int color) {
         this.id = id;
         this.displayName = displayName;
+        this.iconName = iconName;
+        this.color = color;
     }
     
     /**
@@ -64,5 +68,23 @@ public enum WaypointStyle {
      */
     public String displayName() {
         return displayName;
+    }
+
+    /**
+     * Get the icon asset name.
+     *
+     * @return Icon name
+     */
+    public String iconName() {
+        return iconName;
+    }
+
+    /**
+     * Get the color hex code.
+     *
+     * @return Color int (ARGB)
+     */
+    public int color() {
+        return color;
     }
 }
