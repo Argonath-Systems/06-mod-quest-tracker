@@ -2,7 +2,7 @@ package com.argonathsystems.plugin.questtrackerui;
 
 import com.hypixel.hytale.server.core.plugin.JavaPlugin;
 import com.hypixel.hytale.server.core.plugin.JavaPluginInit;
-import com.argonathsystems.adapter.hytaleadapter.HytaleAdapterProvider;
+import com.argonathsystems.framework.accessorapi.AccessorRegistry;
 import com.argonathsystems.framework.accessorapi.AccessorProvider;
 import com.argonathsystems.mods.questtrackerui.QuestTrackerMod;
 
@@ -19,7 +19,7 @@ public class QuestTrackerUiLoaderPlugin extends JavaPlugin {
         getLogger().info("Loading quest-tracker-ui...");
 
         try {
-            AccessorProvider accessors = HytaleAdapterProvider.getInstance();
+            AccessorProvider accessors = AccessorRegistry.getProvider();
             if (accessors == null) {
                 getLogger().error("HytaleAdapterProvider not found. Aborting.");
                 return;
