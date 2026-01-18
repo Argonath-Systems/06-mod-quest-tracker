@@ -1,11 +1,8 @@
 # Standalone Mod: Quest Tracker UI
 
-## Specification
-
-# Quest Tracker UI
-
-> [!abstract] Product Overview
 > A customizable HUD overlay for tracking quests, objectives, and waypoints. Works with any quest system via a simple API. Provides the visual layer without requiring a specific quest backend.
+
+---
 
 ## Product Identity
 
@@ -13,10 +10,166 @@
 |-----------|-------|
 | **Mod ID** | `quest-tracker-ui` |
 | **CurseForge Slug** | `hytale-quest-tracker` |
+| **Maven Artifact** | `com.lordofthetales.mod:quest-tracker-ui` |
 | **License** | Proprietary (CurseForge monetization) |
 | **Monetization** | CurseForge Points + Premium themes |
 | **Target Audience** | Server owners, players |
-| **Dependencies** | None |
+| **Status** | 📋 Spec Ready |
+
+---
+
+## C4 Architecture
+
+### C1: System Context
+
+```mermaid
+C4Context
+    title System Context Diagram - Quest Tracker UI
+    
+    Person(player, "Player", "Uses the HUD to track quests")
+    Person(serverOwner, "Server Owner", "Configures tracker appearance")
+    
+    System(questTracker, "Quest Tracker UI", "Customizable HUD overlay for quest objectives")
+    
+    System_Ext(questBackend, "Quest System", "Any quest provider (Quest Book, Dynamic Quest Gen, etc.)")
+    System_Ext(hytaleEngine, "Hytale Engine", "Game rendering & events")
+    
+    Rel(player, questTracker, "Views tracked quests")
+    Rel(serverOwner, questTracker, "Configures themes & layout")
+    Rel(questBackend, questTracker, "Pushes quest updates via API")
+    Rel(questTracker, hytaleEngine, "Renders HUD via Adapter")
+```
+
+### C2: Container Diagram
+
+```mermaid
+C4Container
+    title Container Diagram - Quest Tracker UI
+
+    Container_Boundary(mod_boundary, "Quest Tracker UI Mod") {
+        Container(tracker_core, "Tracker Core", "Java", "Quest state management, objective grouping")
+        Container(tracker_renderer, "HUD Renderer", "Java", "UI layout, animations, theme engine")
+        Container(tracker_api, "Tracker API", "Java", "Public API for quest systems to push data")
+        Container(tracker_config, "Configuration", "YAML", "Position, themes, behavior settings")
+    }
+
+    Container_Boundary(framework_boundary, "LordOfTheTales Frameworks") {
+        ContainerDb(accessor_api, "Accessor API", "SF-01", "Platform-agnostic interfaces")
+        ContainerDb(core_lib, "Core Library", "SF-02", "WeightedSelector, ProgressTracker, Config")
+    }
+
+    Container_Boundary(adapter_boundary, "Platform Adapter") {
+        Container(hytale_adapter, "Hytale Adapter", "SA-01", "Hytale API implementations")
+    }
+
+    System_Ext(hytale, "Hytale Engine", "Game API")
+
+    Rel(tracker_core, accessor_api, "Uses interfaces")
+    Rel(tracker_core, core_lib, "Uses ProgressTracker, Config")
+    Rel(tracker_renderer, accessor_api, "Uses UIAccessor")
+    Rel(hytale_adapter, accessor_api, "Implements")
+    Rel(hytale_adapter, hytale, "Calls")
+```
+
+### C3: Component Diagram
+
+```mermaid
+C4Component
+    title Component Diagram - Quest Tracker UI Core
+
+    Container_Boundary(tracker_boundary, "Quest Tracker UI") {
+        Component(quest_registry, "TrackedQuestRegistry", "Service", "Manages pinned quests and priorities")
+        Component(objective_tracker, "ObjectiveDisplayManager", "Service", "Formats objectives for display")
+        Component(waypoint_manager, "WaypointManager", "Service", "Calculates distances, compass directions")
+        Component(theme_engine, "ThemeEngine", "Service", "Loads and applies visual themes")
+        Component(hud_renderer, "HUDRenderer", "Renderer", "Draws tracker overlay on screen")
+        Component(animation_controller, "AnimationController", "Utils", "Handles fade, slide, pulse effects")
+        Component(config_loader, "TrackerConfigLoader", "Config", "Loads YAML configuration")
+        Component(public_api, "QuestTrackerAPI", "API", "Public interface for quest systems")
+    }
+
+    Container_Boundary(framework_deps, "Framework Dependencies") {
+        Component(ui_accessor, "UIAccessor", "SF-01", "Toast, HUD rendering abstraction")
+        Component(world_accessor, "WorldAccessor", "SF-01", "Location data for waypoints")
+        Component(progress_tracker, "ProgressTracker", "SF-02", "Progress calculation utilities")
+        Component(config_serializer, "ConfigSerializer", "SF-02", "YAML parsing utilities")
+    }
+
+    Rel(public_api, quest_registry, "Registers quests")
+    Rel(quest_registry, objective_tracker, "Provides objectives")
+    Rel(objective_tracker, hud_renderer, "Sends display data")
+    Rel(waypoint_manager, world_accessor, "Gets player location")
+    Rel(hud_renderer, ui_accessor, "Renders UI")
+    Rel(hud_renderer, theme_engine, "Gets colors/styles")
+    Rel(hud_renderer, animation_controller, "Triggers animations")
+    Rel(objective_tracker, progress_tracker, "Calculates %")
+    Rel(config_loader, config_serializer, "Parses YAML")
+```
+
+---
+
+## Dependency Graph
+
+```
+quest-tracker-ui
+├── com.lordofthetales.framework:accessor-api (SF-01) ── Interfaces only
+├── com.lordofthetales.framework:core-lib (SF-02) ────── ProgressTracker, ConfigSerializer
+└── [Runtime] com.lordofthetales.adapter:hytale-adapter (SA-01)
+```
+
+### Maven Dependencies
+
+```xml
+<dependencies>
+    <!-- Framework Dependencies (compile-time) -->
+    <dependency>
+        <groupId>com.lordofthetales.framework</groupId>
+        <artifactId>accessor-api</artifactId>
+        <version>${accessor.version}</version>
+    </dependency>
+    <dependency>
+        <groupId>com.lordofthetales.framework</groupId>
+        <artifactId>core-lib</artifactId>
+        <version>${core.version}</version>
+    </dependency>
+    
+    <!-- Platform Adapter (runtime only - provided by server) -->
+    <dependency>
+        <groupId>com.lordofthetales.adapter</groupId>
+        <artifactId>hytale-adapter</artifactId>
+        <version>${adapter.version}</version>
+        <scope>runtime</scope>
+    </dependency>
+</dependencies>
+```
+
+---
+
+## Architecture Compliance
+
+### ✅ ZERO Hytale Imports Rule
+
+This mod follows the **Platform Abstraction Layer** pattern:
+
+| Layer | Hytale Imports | Location |
+|-------|:-------------:|----------|
+| Quest Tracker UI (this mod) | ❌ ZERO | `projects/mods/quest-tracker-ui/` |
+| Accessor API (SF-01) | ❌ ZERO | `projects/frameworks/accessor-api/` |
+| Core Library (SF-02) | ❌ ZERO | `projects/frameworks/core-lib/` |
+| Hytale Adapter (SA-01) | ✅ Allowed | `projects/adapters/hytale-adapter/` |
+
+### Architectural Decision Records
+
+| ID | Decision | Rationale |
+|----|----------|-----------|
+| **ADR-001** | Use UIAccessor for all rendering | Enables testing without game engine |
+| **ADR-002** | Theme system via YAML | Non-coders can create themes |
+| **ADR-003** | Push-based API | Quest systems push updates, no polling |
+| **ADR-004** | Animation via state machine | Predictable, testable animations |
+
+---
+
+## Specification
 
 ---
 
