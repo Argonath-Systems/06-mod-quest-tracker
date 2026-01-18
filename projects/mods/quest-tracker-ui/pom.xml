@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>com.argonathsystems</groupId>
+        <artifactId>argonathsystems-parent</artifactId>
+        <version>1.0.0-SNAPSHOT</version>
+        <relativePath>../../parent-pom/pom.xml</relativePath>
+    </parent>
+
+    <groupId>com.argonathsystems.mods</groupId>
+    <artifactId>quest-tracker-ui</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
+    <packaging>jar</packaging>
+
+    <name>Quest Tracker UI</name>
+    <description>A customizable HUD overlay for tracking quests, objectives, and waypoints. Works with any quest system via a simple API.</description>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven.compiler.source>25</maven.compiler.source>
+        <maven.compiler.target>25</maven.compiler.target>
+        
+        <!-- CurseForge metadata -->
+        <curseforge.project.id></curseforge.project.id>
+        <curseforge.slug>hytale-quest-tracker</curseforge.slug>
+    </properties>
+
+    <dependencies>
+        <!-- =====================================================
+             FRAMEWORK DEPENDENCIES
+             ⚠️ ONLY accessor-api and other frameworks allowed
+             ⚠️ NO HYTALE IMPORTS IN THIS MODULE
+             ===================================================== -->
+        
+        <!-- Accessor API - Platform abstraction layer -->
+        <dependency>
+            <groupId>com.argonathsystems.framework</groupId>
+            <artifactId>accessor-api</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <!-- Core Library - Shared utilities -->
+        <dependency>
+            <groupId>com.argonathsystems.framework</groupId>
+            <artifactId>core-lib</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <!-- YAML parsing for themes and config -->
+        <dependency>
+            <groupId>org.yaml</groupId>
+            <artifactId>snakeyaml</artifactId>
+            <version>2.2</version>
+        </dependency>
+
+        <!-- =====================================================
+             TEST DEPENDENCIES
+             ===================================================== -->
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-junit-jupiter</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.assertj</groupId>
+            <artifactId>assertj-core</artifactId>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+            </resource>
+        </resources>
+
+        <plugins>
+            <!-- Compiler Plugin -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+            </plugin>
+
+            <!-- Enforcer Plugin - Prevent Hytale imports -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-enforcer-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>enforce-no-hytale-imports</id>
+                        <goals>
+                            <goal>enforce</goal>
+                        </goals>
+                        <configuration>
+                            <rules>
+                                <bannedDependencies>
+                                    <excludes>
+                                        <exclude>com.hypixel.hytale:*</exclude>
+                                    </excludes>
+                                    <message>
+                                        ⛔ MOD MODULES CANNOT DEPEND ON HYTALE!
+                                        Use accessor-api interfaces instead.
+                                        Only adapter modules may import Hytale classes.
+                                    </message>
+                                </bannedDependencies>
+                            </rules>
+                            <fail>true</fail>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <!-- Shade plugin for distributable JAR -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>3.5.1</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                        <configuration>
+                            <artifactSet>
+                                <includes>
+                                    <include>org.yaml:snakeyaml</include>
+                                </includes>
+                            </artifactSet>
+                            <relocations>
+                                <relocation>
+                                    <pattern>org.yaml.snakeyaml</pattern>
+                                    <shadedPattern>com.argonathsystems.mods.questtrackerui.shaded.snakeyaml</shadedPattern>
+                                </relocation>
+                            </relocations>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
+</project>
