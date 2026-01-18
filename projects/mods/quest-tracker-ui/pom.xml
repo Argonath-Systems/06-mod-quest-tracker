@@ -5,10 +5,10 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>com.argonathsystems</groupId>
-        <artifactId>argonathsystems-parent</artifactId>
+        <groupId>com.argonathsystems.mod</groupId>
+        <artifactId>mods-parent</artifactId>
         <version>1.0.0-SNAPSHOT</version>
-        <relativePath>../../parent-pom/pom.xml</relativePath>
+        <relativePath>../pom.xml</relativePath>
     </parent>
 
     <groupId>com.argonathsystems.mods</groupId>
