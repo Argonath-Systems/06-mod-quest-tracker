@@ -1,0 +1,9 @@
+{
+  "name": "QuestTrackerUiLoader",
+  "version": "1.0.0-SNAPSHOT",
+  "main": "com.argonathsystems.plugin.questtrackerui.QuestTrackerUiLoaderPlugin",
+  "dependencies": [
+    "HytaleAdapter" 
+  ],
+  "description": "Loads the quest-tracker-ui mod."
+}
