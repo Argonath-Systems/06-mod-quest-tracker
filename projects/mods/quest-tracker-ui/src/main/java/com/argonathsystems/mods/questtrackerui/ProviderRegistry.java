@@ -86,6 +86,15 @@ public class ProviderRegistry {
     }
     
     /**
+     * Get all registered providers (alias for getAllProviders).
+     *
+     * @return Unmodifiable collection of providers
+     */
+    public Collection<QuestDataProvider> getProviders() {
+        return getAllProviders();
+    }
+    
+    /**
      * Check if any providers are registered.
      *
      * @return true if at least one provider is registered

@@ -39,7 +39,13 @@ public enum QuestType {
      * Weekly repeatable quest.
      * Displayed with ▣ icon and purple color.
      */
-    WEEKLY("▣", "Weekly Quest");
+    WEEKLY("▣", "Weekly Quest"),
+    
+    /**
+     * Special event quest.
+     * Displayed with ✦ icon and magenta color.
+     */
+    EVENT("✦", "Event Quest");
     
     private final String icon;
     private final String displayName;

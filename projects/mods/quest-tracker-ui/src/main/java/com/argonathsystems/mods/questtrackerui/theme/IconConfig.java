@@ -60,6 +60,34 @@ public record IconConfig(
             case GUILD -> questGuild;
             case DAILY -> questTimed; // Reuse timed icon
             case WEEKLY -> questGuild; // Reuse guild icon
+            case EVENT -> questMain; // Reuse main icon
         };
+    }
+    
+    /**
+     * Get daily quest icon path.
+     *
+     * @return Daily quest icon path
+     */
+    public String questDaily() {
+        return questTimed; // Reuse timed icon for daily
+    }
+    
+    /**
+     * Get weekly quest icon path.
+     *
+     * @return Weekly quest icon path
+     */
+    public String questWeekly() {
+        return questGuild; // Reuse guild icon for weekly
+    }
+    
+    /**
+     * Get event quest icon path.
+     *
+     * @return Event quest icon path
+     */
+    public String questEvent() {
+        return questMain; // Reuse main icon for event
     }
 }

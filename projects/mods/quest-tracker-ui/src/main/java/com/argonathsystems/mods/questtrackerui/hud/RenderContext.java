@@ -118,6 +118,20 @@ public interface RenderContext {
     void drawTexture(String texturePath, int x, int y, int width, int height);
     
     /**
+     * Draw an icon with a tint color.
+     *
+     * @param iconPath Path to the icon texture
+     * @param x X position
+     * @param y Y position
+     * @param width Render width
+     * @param height Render height
+     * @param color Tint color (ARGB)
+     */
+    default void drawIcon(String iconPath, int x, int y, int width, int height, int color) {
+        drawTexture(iconPath, x, y, width, height);
+    }
+    
+    /**
      * Draw a texture region.
      *
      * @param texturePath Path to the texture

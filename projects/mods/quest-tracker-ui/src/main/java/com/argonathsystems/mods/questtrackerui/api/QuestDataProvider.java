@@ -67,6 +67,19 @@ public interface QuestDataProvider {
     List<TrackedQuest> getPinnedQuests(UUID playerId);
     
     /**
+     * Get completed quests for a player (quest history).
+     * 
+     * <p>Returns quests that have been completed by the player,
+     * used for the History tab in the quest list screen.
+     *
+     * @param playerId Target player's unique identifier
+     * @return List of completed quests, may be empty
+     */
+    default List<TrackedQuest> getCompletedQuests(UUID playerId) {
+        return List.of();
+    }
+    
+    /**
      * Pin or unpin a quest for a player.
      *
      * @param playerId Target player's unique identifier

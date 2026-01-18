@@ -127,4 +127,121 @@ public record ColorScheme(
     public int textCompletedArgb() {
         return parseHex(textCompleted);
     }
+    
+    /**
+     * Get quest main color as ARGB.
+     *
+     * @return ARGB integer
+     */
+    public int questMainArgb() {
+        return parseHex(questMain);
+    }
+    
+    /**
+     * Get quest side color as ARGB.
+     *
+     * @return ARGB integer
+     */
+    public int questSideArgb() {
+        return parseHex(questSide);
+    }
+    
+    /**
+     * Get quest timed color as ARGB.
+     *
+     * @return ARGB integer
+     */
+    public int questTimedArgb() {
+        return parseHex(questTimed);
+    }
+    
+    /**
+     * Get quest guild color as ARGB.
+     *
+     * @return ARGB integer
+     */
+    public int questGuildArgb() {
+        return parseHex(questGuild);
+    }
+    
+    /**
+     * Get quest daily color as ARGB.
+     *
+     * @return ARGB integer
+     */
+    public int questDailyArgb() {
+        return parseHex(questDaily);
+    }
+    
+    /**
+     * Get quest weekly color as ARGB.
+     *
+     * @return ARGB integer
+     */
+    public int questWeeklyArgb() {
+        return parseHex(questWeekly);
+    }
+    
+    /**
+     * Get quest event color as ARGB (uses main quest color).
+     *
+     * @return ARGB integer
+     */
+    public int questEventArgb() {
+        return parseHex(questMain); // Reuse main color for events
+    }
+    
+    /**
+     * Get progress fill color as ARGB.
+     *
+     * @return ARGB integer
+     */
+    public int progressFillArgb() {
+        return parseHex(progressFill);
+    }
+    
+    /**
+     * Get progress background color as ARGB.
+     *
+     * @return ARGB integer
+     */
+    public int progressBackgroundArgb() {
+        return parseHex(progressBackground);
+    }
+    
+    /**
+     * Get progress complete color as ARGB.
+     *
+     * @return ARGB integer
+     */
+    public int progressCompleteArgb() {
+        return parseHex(progressComplete);
+    }
+    
+    /**
+     * Get timer normal color as ARGB.
+     *
+     * @return ARGB integer
+     */
+    public int timerNormalArgb() {
+        return parseHex(timerNormal);
+    }
+    
+    /**
+     * Get timer warning color as ARGB.
+     *
+     * @return ARGB integer
+     */
+    public int timerWarningArgb() {
+        return parseHex(timerWarning);
+    }
+    
+    /**
+     * Get timer critical color as ARGB.
+     *
+     * @return ARGB integer
+     */
+    public int timerCriticalArgb() {
+        return parseHex(timerCritical);
+    }
 }
