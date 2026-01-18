@@ -71,6 +71,15 @@ public class QuestTrackerHUD {
             this.pinnedQuests = quests;
         }
     }
+
+    /**
+     * Get the currently pinned quests.
+     *
+     * @return List of pinned quests
+     */
+    public List<TrackedQuest> getPinnedQuests() {
+        return pinnedQuests;
+    }
     
     /**
      * Set the function for calculating distances to objectives.
