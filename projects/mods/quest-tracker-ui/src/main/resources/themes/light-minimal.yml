@@ -1,0 +1,42 @@
+# Light Minimal Theme
+theme:
+  id: light-minimal
+  name: "Light Minimal"
+  author: "LordOfTheTales"
+  premium: false
+
+  colors:
+    background: "#f5f5f5"
+    background_opacity: 0.95
+    border: "#cccccc"
+
+    text_primary: "#333333"
+    text_secondary: "#666666"
+    text_completed: "#999999"
+
+    quest_main: "#b8860b" # Dark goldenrod
+    quest_side: "#4682b4" # Steel blue
+    quest_timed: "#dc143c" # Crimson
+    quest_guild: "#228b22" # Forest green
+    quest_daily: "#ff8c00" # Dark orange
+    quest_weekly: "#6a5acd" # Slate blue
+
+    progress_fill: "#4caf50"
+    progress_background: "#e0e0e0"
+    progress_complete: "#8bc34a"
+
+    timer_normal: "#333333"
+    timer_warning: "#ff9800"
+    timer_critical: "#f44336"
+
+  fonts:
+    title: "minecraft"
+    body: "minecraft"
+    size_title: 14
+    size_body: 12
+    size_small: 10
+
+  borders:
+    style: "solid"
+    radius: 0
+    width: 1
