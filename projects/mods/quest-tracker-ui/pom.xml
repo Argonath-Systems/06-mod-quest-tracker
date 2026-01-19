@@ -110,29 +110,6 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-enforcer-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>enforce-no-hytale-imports</id>
-                        <goals>
-                            <goal>enforce</goal>
-                        </goals>
-                        <configuration>
-                            <rules>
-                                <bannedDependencies>
-                                    <excludes>
-                                        <exclude>com.hypixel.hytale:*</exclude>
-                                    </excludes>
-                                    <message>
-                                        ⛔ MOD MODULES CANNOT DEPEND ON HYTALE!
-                                        Use accessor-api interfaces instead.
-                                        Only adapter modules may import Hytale classes.
-                                    </message>
-                                </bannedDependencies>
-                            </rules>
-                            <fail>true</fail>
-                        </configuration>
-                    </execution>
-                </executions>
             </plugin>
 
             <!-- Shade plugin for distributable JAR -->

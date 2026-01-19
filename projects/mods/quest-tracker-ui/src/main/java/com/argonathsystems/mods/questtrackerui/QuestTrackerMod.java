@@ -1,6 +1,7 @@
 package com.argonathsystems.mods.questtrackerui;
 
 import com.argonathsystems.framework.accessorapi.AccessorProvider;
+import com.argonathsystems.framework.accessorapi.AccessorRegistry;
 import com.argonathsystems.framework.accessorapi.dto.LocationData;
 import com.argonathsystems.mods.questtrackerui.api.QuestDataProvider;
 import com.argonathsystems.mods.questtrackerui.api.QuestUpdateListener;
@@ -25,12 +26,16 @@ import java.util.List;
 import java.util.UUID;
 import java.util.function.Supplier;
 
+import com.argonathsystems.adapter.api.ArgonathPlugin;
+import com.argonathsystems.adapter.api.ArgonathPluginInitconfig;
+
+
 /**
  * Main entry point for the Quest Tracker UI mod.
  * 
  * <p>Coordinates all components and handles lifecycle.
  */
-public class QuestTrackerMod implements QuestUpdateListener {
+public class QuestTrackerMod extends ArgonathPlugin implements QuestUpdateListener {
     
     public static final String MOD_ID = "quest-tracker-ui";
     public static final String MOD_NAME = "Quest Tracker UI";
@@ -64,13 +69,12 @@ public class QuestTrackerMod implements QuestUpdateListener {
     
     /**
      * Create the Quest Tracker mod.
-     *
-     * @param accessorProvider Platform accessor provider
-     * @param configDirectory Directory for configuration files
      */
-    public QuestTrackerMod(AccessorProvider accessorProvider, Path configDirectory) {
-        this.accessorProvider = accessorProvider;
-        this.configDirectory = configDirectory;
+    public QuestTrackerMod(ArgonathPluginInitconfig init) {
+        super(init);
+        this.accessorProvider = AccessorRegistry.getProvider();
+        // Assuming config dir logic is handled via accessor or hardcoded relative to data folder
+        this.configDirectory = Path.of("data", "quest-tracker"); 
         this.themeRegistry = new ThemeRegistry();
         this.providerRegistry = ProviderRegistry.getInstance();
         this.configLoader = new ConfigLoader();
