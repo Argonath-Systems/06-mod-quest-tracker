@@ -40,6 +40,7 @@
             <groupId>com.argonathsystems.framework</groupId>
             <artifactId>accessor-api</artifactId>
             <version>${project.version}</version>
+            <scope>provided</scope>
         </dependency>
 
         <!-- Core Library - Shared utilities -->
@@ -47,6 +48,7 @@
             <groupId>com.argonathsystems.framework</groupId>
             <artifactId>core-lib</artifactId>
             <version>${project.version}</version>
+            <scope>provided</scope>
         </dependency>
 
         <!-- YAML parsing for themes and config -->
