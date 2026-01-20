@@ -11,9 +11,9 @@
   "Website": "",
   "ServerVersion": "*",
   "Dependencies": {
-    "AccessorApi": "1.0.0-SNAPSHOT",
-    "CoreLib": "1.0.0-SNAPSHOT",
-    "HytaleAdapter": "1.0.0-SNAPSHOT"
+    "com.argonathsystems.mods:AccessorApi": "1.0.0-SNAPSHOT",
+    "com.argonathsystems.mods:CoreLib": "1.0.0-SNAPSHOT",
+    "com.argonathsystems.mods:HytaleAdapter": "1.0.0-SNAPSHOT"
   },
   "OptionalDependencies": {},
   "DisabledByDefault": false,
