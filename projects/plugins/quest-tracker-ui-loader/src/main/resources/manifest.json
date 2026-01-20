@@ -11,10 +11,7 @@
   "Website": "",
   "ServerVersion": "*",
   "Dependencies": {
-    "ArgonathSystems:AccessorApi": "*",
-    "ArgonathSystems:CoreLib": "*",
-    "ArgonathSystems:HytaleAdapter": "*",
-    "ArgonathSystems:QuestTrackerUi": "*"
+    "ArgonathSystems:HytaleAdapter": "*"
   },
   "OptionalDependencies": {},
   "DisabledByDefault": false,
