@@ -26,8 +26,8 @@ import java.util.List;
 import java.util.UUID;
 import java.util.function.Supplier;
 
-import com.argonathsystems.adapter.api.ArgonathPlugin;
-import com.argonathsystems.adapter.api.ArgonathPluginInitconfig;
+import com.hypixel.hytale.server.core.plugin.JavaPlugin;
+import com.hypixel.hytale.server.core.plugin.JavaPluginInit;
 
 
 /**
@@ -35,7 +35,7 @@ import com.argonathsystems.adapter.api.ArgonathPluginInitconfig;
  * 
  * <p>Coordinates all components and handles lifecycle.
  */
-public class QuestTrackerMod extends ArgonathPlugin implements QuestUpdateListener {
+public class QuestTrackerMod extends JavaPlugin implements QuestUpdateListener {
     
     public static final String MOD_ID = "quest-tracker-ui";
     public static final String MOD_NAME = "Quest Tracker UI";
@@ -70,7 +70,7 @@ public class QuestTrackerMod extends ArgonathPlugin implements QuestUpdateListen
     /**
      * Create the Quest Tracker mod.
      */
-    public QuestTrackerMod(ArgonathPluginInitconfig init) {
+    public QuestTrackerMod(JavaPluginInit init) {
         super(init);
         this.accessorProvider = AccessorRegistry.getProvider();
         // Assuming config dir logic is handled via accessor or hardcoded relative to data folder

@@ -10,7 +10,11 @@
   ],
   "Website": "",
   "ServerVersion": "*",
-  "Dependencies": {},
+  "Dependencies": {
+    "AccessorApi": "1.0.0-SNAPSHOT",
+    "CoreLib": "1.0.0-SNAPSHOT",
+    "HytaleAdapter": "1.0.0-SNAPSHOT"
+  },
   "OptionalDependencies": {},
   "DisabledByDefault": false,
   "IncludesAssetPack": false,
