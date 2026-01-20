@@ -1,0 +1,20 @@
+{
+  "name": "QuestTrackerUi",
+  "schemaVersion": 1,
+  "version": "1.0.0-SNAPSHOT",
+  "main": "com.argonathsystems.mods.questtrackerui.QuestTrackerMod",
+  "description": "Generated manifest for Quest Tracker Ui",
+  "group": "ArgonathSystems",
+  "dependencies": [
+    "ArgonathSystems:AccessorApi",
+    "ArgonathSystems:CoreLib",
+    "ArgonathSystems:HytaleAdapter"
+  ],
+  "authors": [
+    {
+      "Name": "ArgonathSystems"
+    }
+  ],
+  "website": "",
+  "includesAssetPack": false
+}
