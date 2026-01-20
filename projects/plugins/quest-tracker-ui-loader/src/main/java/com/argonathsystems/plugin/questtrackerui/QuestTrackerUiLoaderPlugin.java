@@ -16,29 +16,29 @@ public class QuestTrackerUiLoaderPlugin extends JavaPlugin {
 
     @Override
     protected void setup() {
-        getLogger().info("Loading quest-tracker-ui...");
+        getLogger().atInfo().log("Loading quest-tracker-ui...");
 
         try {
             AccessorProvider accessors = AccessorRegistry.getProvider();
             if (accessors == null) {
-                getLogger().error("HytaleAdapterProvider not found. Aborting.");
+                getLogger().atSevere().log("HytaleAdapterProvider not found. Aborting.");
                 return;
             }
 
             // TODO: Instantiate the core mod with correct parameters
             // This is a generated stub. Please verify constructor arguments.
             // coreMod = new QuestTrackerMod(accessors); 
-            getLogger().info("Warning: Core instantiation is commented out in generated loader.");
+            getLogger().atInfo().log("Warning: Core instantiation is commented out in generated loader.");
 
-            getLogger().info("quest-tracker-ui initialized successfully (Stub).");
+            getLogger().atInfo().log("quest-tracker-ui initialized successfully (Stub).");
 
         } catch (Exception e) {
-            getLogger().error("Failed to load quest-tracker-ui", e);
+            getLogger().atSevere().withCause(e).log("Failed to load quest-tracker-ui");
         }
     }
 
-    @Override
-    public void onDisable() {
-        getLogger().info("quest-tracker-ui disabled.");
-    }
+    // @Override
+    // public void onDisable() {
+    //     getLogger().atInfo().log("quest-tracker-ui disabled.");
+    // }
 }
