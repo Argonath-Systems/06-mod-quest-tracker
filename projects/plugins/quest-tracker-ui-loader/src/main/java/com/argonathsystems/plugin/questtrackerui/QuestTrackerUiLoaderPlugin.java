@@ -38,7 +38,7 @@ public class QuestTrackerUiLoaderPlugin extends JavaPlugin {
     }
 
     // @Override
-    // public void onDisable() {
+    // public void shutdown() {
     //     getLogger().atInfo().log("quest-tracker-ui disabled.");
     // }
 }
