@@ -41,7 +41,7 @@ public class QuestTrackerMod extends JavaPlugin implements QuestUpdateListener {
     public static final String MOD_NAME = "Quest Tracker UI";
     public static final String VERSION = "1.0.0";
     
-    private final AccessorProvider accessorProvider;
+    private AccessorProvider accessorProvider;
     private final Path configDirectory;
     
     // Core systems
@@ -72,13 +72,17 @@ public class QuestTrackerMod extends JavaPlugin implements QuestUpdateListener {
      */
     public QuestTrackerMod(JavaPluginInit init) {
         super(init);
-        this.accessorProvider = AccessorRegistry.getProvider();
         // Assuming config dir logic is handled via accessor or hardcoded relative to data folder
         this.configDirectory = Path.of("data", "quest-tracker"); 
         this.themeRegistry = new ThemeRegistry();
         this.providerRegistry = ProviderRegistry.getInstance();
         this.configLoader = new ConfigLoader();
         this.initialized = false;
+    }
+
+    @Override
+    public void onEnable() {
+        initialize();
     }
     
     /**
@@ -88,6 +92,7 @@ public class QuestTrackerMod extends JavaPlugin implements QuestUpdateListener {
         if (initialized) {
             return;
         }
+        this.accessorProvider = AccessorRegistry.getProvider();
         
         // Load configuration
         loadConfiguration();
