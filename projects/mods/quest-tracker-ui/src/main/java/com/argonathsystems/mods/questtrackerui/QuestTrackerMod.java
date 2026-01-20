@@ -81,7 +81,7 @@ public class QuestTrackerMod extends JavaPlugin implements QuestUpdateListener {
     }
 
     @Override
-    public void onEnable() {
+    protected void setup() {
         initialize();
     }
     

@@ -69,12 +69,6 @@
                                     <include>com.argonathsystems.mods:quest-tracker-ui</include>
                                 </includes>
                             </artifactSet>
-                            <relocations>
-                                <relocation>
-                                    <pattern>com.argonathsystems.mods</pattern>
-                                    <shadedPattern>com.argonathsystems.plugin.questtrackerui.shaded</shadedPattern>
-                                </relocation>
-                            </relocations>
                         </configuration>
                     </execution>
                 </executions>

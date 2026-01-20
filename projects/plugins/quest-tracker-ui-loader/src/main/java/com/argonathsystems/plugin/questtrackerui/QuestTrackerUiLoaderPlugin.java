@@ -15,7 +15,7 @@ public class QuestTrackerUiLoaderPlugin extends JavaPlugin {
     }
 
     @Override
-    public void onEnable() {
+    protected void setup() {
         getLogger().info("Loading quest-tracker-ui...");
 
         try {
