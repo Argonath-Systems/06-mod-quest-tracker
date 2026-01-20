@@ -1,6 +1,9 @@
 package com.argonathsystems.mods.questtrackerui.waypoint;
 
 import com.argonathsystems.framework.accessorapi.dto.LocationData;
+import com.argonathsystems.framework.text.Component;
+import com.argonathsystems.framework.text.Style;
+import com.argonathsystems.framework.text.TextColor;
 import com.argonathsystems.mods.questtrackerui.api.QuestWaypoint;
 import com.argonathsystems.mods.questtrackerui.hud.RenderContext;
 import com.argonathsystems.mods.questtrackerui.theme.Theme;
@@ -139,6 +142,7 @@ public class CompassRenderer {
                                   double distance, double opacity, boolean isEdge) {
         int alpha = (int) (opacity * 255);
         int color = (alpha << 24) | 0xFFFFFF;
+        Style style = Style.of(TextColor.of(color));
         
         // Draw icon
         String iconPath = theme.icons().waypoint();
@@ -150,7 +154,7 @@ public class CompassRenderer {
             String distanceText = formatDistance(distance);
             int textX = pos.x - ctx.textWidth(distanceText) / 2;
             int textY = pos.y + INDICATOR_SIZE / 2 + 2;
-            ctx.drawTextWithShadow(distanceText, textX, textY, color);
+            ctx.drawText(Component.text(distanceText, theme.fonts().small().merge(style)), textX, textY);
         }
         
         // Draw label if on edge
@@ -158,7 +162,7 @@ public class CompassRenderer {
             String label = waypoint.label();
             int labelX = pos.x - ctx.textWidth(label) / 2;
             int labelY = pos.y - INDICATOR_SIZE / 2 - ctx.textHeight() - 2;
-            ctx.drawTextWithShadow(label, labelX, labelY, color);
+            ctx.drawText(Component.text(label, theme.fonts().body().merge(style)), labelX, labelY);
         }
     }
     

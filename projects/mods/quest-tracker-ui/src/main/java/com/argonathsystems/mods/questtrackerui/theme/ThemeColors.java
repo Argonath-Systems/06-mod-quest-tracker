@@ -1,5 +1,7 @@
 package com.argonathsystems.mods.questtrackerui.theme;
 
+import com.argonathsystems.framework.text.TextColor;
+
 /**
  * Helper class providing quick access to theme colors as ARGB integers.
  * 
@@ -18,6 +20,18 @@ public final class ThemeColors {
     public ThemeColors(ColorScheme scheme) {
         this.scheme = scheme;
     }
+    
+    // --- TextColor Integration ---
+    
+    public TextColor textPrimaryColor() { return TextColor.fromHex(scheme.textPrimary()); }
+    public TextColor textSecondaryColor() { return TextColor.fromHex(scheme.textSecondary()); }
+    public TextColor textCompletedColor() { return TextColor.fromHex(scheme.textCompleted()); }
+    
+    public TextColor questMainColor() { return TextColor.fromHex(scheme.questMain()); }
+    public TextColor questSideColor() { return TextColor.fromHex(scheme.questSide()); }
+    public TextColor questTimedColor() { return TextColor.fromHex(scheme.questTimed()); }
+    
+    // --- Legacy Accessors ---
     
     /** Background with opacity applied */
     public int background() { return scheme.backgroundArgb(); }

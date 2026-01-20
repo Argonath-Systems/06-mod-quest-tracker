@@ -43,6 +43,12 @@
             <scope>provided</scope>
         </dependency>
 
+        <dependency>
+            <groupId>com.argonathsystems.framework</groupId>
+            <artifactId>text-styling-lib</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
         <!-- Core Library - Shared utilities -->
         <dependency>
             <groupId>com.argonathsystems.framework</groupId>

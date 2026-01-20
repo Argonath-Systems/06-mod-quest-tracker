@@ -1,5 +1,6 @@
 package com.argonathsystems.mods.questtrackerui.theme;
 
+import com.argonathsystems.framework.text.Style;
 import org.yaml.snakeyaml.Yaml;
 
 import java.io.IOException;
@@ -82,7 +83,7 @@ public class ThemeLoader {
             boolean isPremium = getBoolean(themeData, "premium", false);
             
             ColorScheme colors = parseColors((Map<String, Object>) themeData.get("colors"));
-            FontConfig fonts = parseFonts((Map<String, Object>) themeData.get("fonts"));
+            TextStylingProfile fonts = parseFonts((Map<String, Object>) themeData.get("fonts"));
             IconConfig icons = parseIcons((Map<String, Object>) themeData.get("icons"));
             BorderConfig borders = parseBorders((Map<String, Object>) themeData.get("borders"));
             
@@ -119,17 +120,30 @@ public class ThemeLoader {
         );
     }
     
-    private FontConfig parseFonts(Map<String, Object> data) {
+    private TextStylingProfile parseFonts(Map<String, Object> data) {
         if (data == null) {
-            return FontConfig.DEFAULT;
+            return TextStylingProfile.DEFAULT;
         }
         
-        return new FontConfig(
-            getString(data, "title", "minecraft"),
-            getString(data, "body", "minecraft"),
-            getInt(data, "size_title", 14),
-            getInt(data, "size_body", 12),
-            getInt(data, "size_small", 10)
+        String titleFont = getString(data, "title", "minecraft");
+        String bodyFont = getString(data, "body", "minecraft");
+        int titleSize = getInt(data, "size_title", 14);
+        int bodySize = getInt(data, "size_body", 12);
+        int smallSize = getInt(data, "size_small", 10);
+        
+        com.argonathsystems.framework.text.Style fontStyleTitle = com.argonathsystems.framework.text.Style.builder().font(titleFont).build();
+        com.argonathsystems.framework.text.Style fontStyleBody = com.argonathsystems.framework.text.Style.builder().font(bodyFont).build();
+        
+        return new TextStylingProfile(
+            TextStylingProfile.DEFAULT.title().merge(fontStyleTitle),
+            TextStylingProfile.DEFAULT.body().merge(fontStyleBody),
+            TextStylingProfile.DEFAULT.small().merge(fontStyleBody),
+            TextStylingProfile.DEFAULT.active().merge(fontStyleBody),
+            TextStylingProfile.DEFAULT.completed().merge(fontStyleBody),
+            TextStylingProfile.DEFAULT.failed().merge(fontStyleBody),
+            titleSize,
+            bodySize,
+            smallSize
         );
     }
     

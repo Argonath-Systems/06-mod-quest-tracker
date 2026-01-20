@@ -1,5 +1,8 @@
 package com.argonathsystems.mods.questtrackerui.hud;
 
+import com.argonathsystems.framework.text.Component;
+import com.argonathsystems.framework.text.Style;
+import com.argonathsystems.framework.text.TextColor;
 import com.argonathsystems.mods.questtrackerui.api.TrackedObjective;
 import com.argonathsystems.mods.questtrackerui.api.TrackedQuest;
 import com.argonathsystems.mods.questtrackerui.config.TrackerConfig;
@@ -91,11 +94,58 @@ public class QuestTrackerHUD {
     }
     
     /**
-     * Toggle visibility of the tracker.
+     * Generate XAML content for the quest tracker.
      */
-    public void toggleVisibility() {
-        this.visible = !this.visible;
+    public String generateXaml() {
+        StringBuilder xaml = new StringBuilder();
+        
+        if (pinnedQuests.isEmpty()) {
+             xaml.append("<Border Background='#80000000' CornerRadius='4' Padding='10' Margin='0,0,0,5'>")
+                 .append("<TextBlock Text='No Quests' Foreground='#FFD700' FontSize='18' FontWeight='Bold'/>")
+                 .append("</Border>");
+        } else {
+            for (TrackedQuest quest : pinnedQuests) {
+                xaml.append("<Border Background='#80000000' CornerRadius='4' Padding='10' Margin='0,0,0,5'><StackPanel>");
+                
+                // Title
+                xaml.append("<StackPanel Orientation='Horizontal' Margin='0,0,0,5'>");
+                xaml.append("<TextBlock Text='").append(quest.type().icon()).append("' Foreground='#FFD700' FontSize='18' Margin='0,0,5,0'/>");
+                xaml.append("<TextBlock Text='").append(quest.name()).append("' Foreground='#FFD700' FontSize='18' FontWeight='Bold'/>");
+                xaml.append("</StackPanel>");
+                
+                // Objectives
+                xaml.append("<StackPanel Margin='10,0,0,0'>");
+                 List<TrackedObjective> objectives = quest.objectives();
+                 for (TrackedObjective obj : objectives) {
+                     String color = obj.isComplete() ? "#55FF55" : "#FFFFFF";
+                     String decoration = obj.isComplete() ? "Strikethrough" : "None";
+                     
+                     xaml.append("<TextBlock Text='- ").append(obj.description());
+                     if (obj.currentProgress() > 0 && obj.requiredProgress() > 0) {
+                         xaml.append(" (").append(obj.currentProgress()).append("/").append(obj.requiredProgress()).append(")");
+                     }
+                     xaml.append("' Foreground='").append(color).append("' TextDecorations='").append(decoration).append("' FontSize='14' Margin='0,0,0,2'/>");
+                 }
+                xaml.append("</StackPanel>"); // objective-list
+
+                xaml.append("</StackPanel></Border>"); // quest-entry-stack, quest-entry-border
+            }
+        }
+        return xaml.toString();
     }
+    
+    /*
+    public String generateHtml() {
+        // Legacy HTML generation removed
+    }
+    */
+    
+    /*
+    public void render(RenderContext ctx) {
+        if (!visible || !config.display().showDistance()) return;
+        // Legacy render code removed
+    }
+    */
     
     /**
      * Set visibility of the tracker.
@@ -104,6 +154,13 @@ public class QuestTrackerHUD {
      */
     public void setVisible(boolean visible) {
         this.visible = visible;
+    }
+    
+    /**
+     * Toggle visibility of the tracker.
+     */
+    public void toggleVisibility() {
+        this.visible = !this.visible;
     }
     
     /**
@@ -197,17 +254,19 @@ public class QuestTrackerHUD {
     private int drawHeader(RenderContext ctx, int x, int y, int width, Theme theme) {
         // Title
         String title = "QUEST TRACKER";
-        ctx.drawTextWithShadow(title, x + PADDING, y + 4, theme.colors().textPrimaryArgb());
+        Style titleStyle = theme.fonts().title().merge(Style.of(TextColor.fromHex(theme.colors().textPrimary())));
+        ctx.drawText(Component.text(title, titleStyle), x + PADDING, y + 4);
         
         // Settings button (gear icon)
         String settingsIcon = "⚙";
         int settingsX = x + width - PADDING - ctx.textWidth(settingsIcon) - 16;
-        ctx.drawText(settingsIcon, settingsX, y + 4, theme.colors().textSecondaryArgb());
+        Style iconStyle = theme.fonts().body().merge(Style.of(TextColor.fromHex(theme.colors().textSecondary())));
+        ctx.drawText(Component.text(settingsIcon, iconStyle), settingsX, y + 4);
         
         // Collapse button
         String collapseIcon = collapsed ? "+" : "−";
         int collapseX = x + width - PADDING - ctx.textWidth(collapseIcon);
-        ctx.drawText(collapseIcon, collapseX, y + 4, theme.colors().textSecondaryArgb());
+        ctx.drawText(Component.text(collapseIcon, iconStyle), collapseX, y + 4);
         
         return HEADER_HEIGHT;
     }

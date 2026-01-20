@@ -18,7 +18,7 @@ public record Theme(
     String author,
     boolean isPremium,
     ColorScheme colors,
-    FontConfig fonts,
+    TextStylingProfile fonts, // Renaming to keep field similar but change Type
     IconConfig icons,
     BorderConfig borders
 ) {
@@ -32,7 +32,7 @@ public record Theme(
         "LordOfTheTales",
         false,
         ColorScheme.DARK_FANTASY,
-        FontConfig.DEFAULT,
+        TextStylingProfile.DEFAULT,
         IconConfig.DEFAULT,
         BorderConfig.ROUNDED
     );
@@ -46,7 +46,7 @@ public record Theme(
         "LordOfTheTales",
         false,
         ColorScheme.LIGHT_MINIMAL,
-        FontConfig.DEFAULT,
+        TextStylingProfile.DEFAULT,
         IconConfig.DEFAULT,
         BorderConfig.SOLID
     );
@@ -87,7 +87,7 @@ public record Theme(
         private String author = "Unknown";
         private boolean isPremium = false;
         private ColorScheme colors = ColorScheme.DARK_FANTASY;
-        private FontConfig fonts = FontConfig.DEFAULT;
+        private TextStylingProfile fonts = TextStylingProfile.DEFAULT;
         private IconConfig icons = IconConfig.DEFAULT;
         private BorderConfig borders = BorderConfig.ROUNDED;
         
@@ -116,7 +116,7 @@ public record Theme(
             return this;
         }
         
-        public Builder fonts(FontConfig fonts) {
+        public Builder fonts(TextStylingProfile fonts) {
             this.fonts = fonts;
             return this;
         }

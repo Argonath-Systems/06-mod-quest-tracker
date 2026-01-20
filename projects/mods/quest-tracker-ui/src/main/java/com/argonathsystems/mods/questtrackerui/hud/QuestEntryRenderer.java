@@ -1,5 +1,8 @@
 package com.argonathsystems.mods.questtrackerui.hud;
 
+import com.argonathsystems.framework.text.Component;
+import com.argonathsystems.framework.text.Style;
+import com.argonathsystems.framework.text.TextColor;
 import com.argonathsystems.mods.questtrackerui.api.TrackedObjective;
 import com.argonathsystems.mods.questtrackerui.api.TrackedQuest;
 import com.argonathsystems.mods.questtrackerui.theme.Theme;
@@ -58,18 +61,21 @@ public class QuestEntryRenderer {
         int currentY = y;
         
         // Draw quest title with icon
-        int titleColor = getQuestColor(quest);
+        TextColor titleColor = getQuestColor(quest);
         String icon = quest.type().icon();
+        Style titleStyle = theme.fonts().title().merge(Style.of(titleColor));
         
-        ctx.drawTextWithShadow(icon, x, currentY, titleColor);
-        ctx.drawTextWithShadow(" " + quest.name(), x + ctx.textWidth(icon), currentY, titleColor);
+        ctx.drawText(Component.text(icon, titleStyle), x, currentY);
+        ctx.drawText(Component.text(" " + quest.name(), titleStyle), x + ctx.textWidth(icon), currentY);
         
         // Draw timer if timed quest
         if (quest.isTimed()) {
             String timerText = "⏱ " + quest.formattedTimeRemaining();
-            int timerColor = getTimerColor(quest);
+            TextColor timerColor = getTimerColor(quest);
+            Style timerStyle = theme.fonts().small().merge(Style.of(timerColor)); // Assuming small font for timer
+            
             int timerX = x + width - ctx.textWidth(timerText);
-            ctx.drawText(timerText, timerX, currentY, timerColor);
+            ctx.drawText(Component.text(timerText, timerStyle), timerX, currentY);
         }
         
         currentY += ctx.textHeight() + 2;
@@ -95,7 +101,7 @@ public class QuestEntryRenderer {
         if (objectives.size() > maxObjectives) {
             int remaining = objectives.size() - maxObjectives;
             String moreText = "... and " + remaining + " more";
-            ctx.drawText(moreText, x + OBJECTIVE_INDENT, currentY, theme.colors().textSecondaryArgb());
+            ctx.drawText(Component.text(moreText, theme.fonts().body().merge(Style.of(TextColor.fromHex(theme.colors().textSecondary())))), x + OBJECTIVE_INDENT, currentY);
             currentY += ctx.textHeight();
         }
         
@@ -106,9 +112,9 @@ public class QuestEntryRenderer {
      * Get the color for a quest type.
      *
      * @param quest Quest to get color for
-     * @return ARGB color
+     * @return TextColor color
      */
-    private int getQuestColor(TrackedQuest quest) {
+    private TextColor getQuestColor(TrackedQuest quest) {
         String hexColor = switch (quest.type()) {
             case MAIN -> theme.colors().questMain();
             case SIDE -> theme.colors().questSide();
@@ -118,28 +124,28 @@ public class QuestEntryRenderer {
             case WEEKLY -> theme.colors().questWeekly();
             case EVENT -> theme.colors().questMain(); // Use main color for events
         };
-        return theme.colors().parseHex(hexColor);
+        return TextColor.fromHex(hexColor);
     }
     
     /**
      * Get the timer color based on remaining time.
      *
      * @param quest Timed quest
-     * @return ARGB color
+     * @return TextColor color
      */
-    private int getTimerColor(TrackedQuest quest) {
+    private TextColor getTimerColor(TrackedQuest quest) {
         if (quest.timeRemaining() == null) {
-            return theme.colors().textPrimaryArgb();
+            return TextColor.fromHex(theme.colors().textPrimary());
         }
         
         long secondsRemaining = quest.timeRemaining().toSeconds();
         
         if (secondsRemaining <= 60) {
-            return theme.colors().parseHex(theme.colors().timerCritical());
+            return TextColor.fromHex(theme.colors().timerCritical());
         } else if (secondsRemaining <= 300) {
-            return theme.colors().parseHex(theme.colors().timerWarning());
+            return TextColor.fromHex(theme.colors().timerWarning());
         }
-        return theme.colors().parseHex(theme.colors().timerNormal());
+        return TextColor.fromHex(theme.colors().timerNormal());
     }
     
     /**

@@ -1,5 +1,8 @@
 package com.argonathsystems.mods.questtrackerui.notification;
 
+import com.argonathsystems.framework.text.Component;
+import com.argonathsystems.framework.text.Style;
+import com.argonathsystems.framework.text.TextColor;
 import com.argonathsystems.mods.questtrackerui.hud.RenderContext;
 import com.argonathsystems.mods.questtrackerui.theme.ColorScheme;
 import com.argonathsystems.mods.questtrackerui.theme.Theme;
@@ -163,11 +166,13 @@ public class ToastRenderer {
         // Title
         int textX = x + TOAST_PADDING + (toast.icon() != null ? 32 : 0);
         int titleColor = (alpha << 24) | (theme.colors().textPrimaryArgb() & 0x00FFFFFF);
-        ctx.drawTextWithShadow(toast.title(), textX, y + TOAST_PADDING, titleColor);
+        Style titleStyle = theme.fonts().title().merge(Style.of(TextColor.of(titleColor)));
+        ctx.drawText(Component.text(toast.title(), titleStyle), textX, y + TOAST_PADDING);
         
         // Message
         int messageColor = (alpha << 24) | (theme.colors().textSecondaryArgb() & 0x00FFFFFF);
-        ctx.drawText(toast.message(), textX, y + TOAST_PADDING + ctx.textHeight() + 4, messageColor);
+        Style messageStyle = theme.fonts().body().merge(Style.of(TextColor.of(messageColor)));
+        ctx.drawText(Component.text(toast.message(), messageStyle), textX, y + TOAST_PADDING + ctx.textHeight() + 4);
         
         // Rewards
         if (toast.hasRewards()) {
@@ -175,7 +180,7 @@ public class ToastRenderer {
             int rewardX = textX;
             for (var reward : toast.rewards()) {
                 String text = reward.formatted();
-                ctx.drawText(text, rewardX, rewardY, messageColor);
+                ctx.drawText(Component.text(text, messageStyle), rewardX, rewardY);
                 rewardX += ctx.textWidth(text) + 12;
             }
         }

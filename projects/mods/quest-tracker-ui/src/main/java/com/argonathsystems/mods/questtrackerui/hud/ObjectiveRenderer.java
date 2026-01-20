@@ -1,5 +1,7 @@
 package com.argonathsystems.mods.questtrackerui.hud;
 
+import com.argonathsystems.framework.text.Component;
+import com.argonathsystems.framework.text.Style;
 import com.argonathsystems.mods.questtrackerui.api.TrackedObjective;
 import com.argonathsystems.mods.questtrackerui.theme.Theme;
 
@@ -50,14 +52,14 @@ public class ObjectiveRenderer {
                       boolean showProgressBar, boolean showDistance, double distanceMeters) {
         int currentY = y;
         
-        // Determine text color based on completion
-        int textColor = objective.isComplete() 
-            ? theme.colors().textCompletedArgb()
-            : theme.colors().textSecondaryArgb();
+        // Determine style based on completion
+        Style style = objective.isComplete() 
+            ? theme.fonts().completed()
+            : theme.fonts().body();
         
         // Draw completion icon
         String icon = objective.isComplete() ? "☑" : "☐";
-        ctx.drawText(icon, x, currentY, textColor);
+        ctx.drawText(Component.text(icon, style), x, currentY);
         
         // Draw objective description
         int textX = x + ICON_SIZE + PADDING;
@@ -73,7 +75,7 @@ public class ObjectiveRenderer {
         }
         
         description = truncateText(ctx, description, maxTextWidth);
-        ctx.drawText(description, textX, currentY, textColor);
+        ctx.drawText(Component.text(description, style), textX, currentY);
         
         // Draw progress bar if applicable
         if (showProgressBar && objective.requiredProgress() > 1) {
@@ -85,7 +87,7 @@ public class ObjectiveRenderer {
         if (showDistance && objective.hasWaypoint() && distanceMeters >= 0) {
             String distanceText = formatDistance(distanceMeters);
             int distanceX = x + width - ctx.textWidth(distanceText);
-            ctx.drawText("→ " + distanceText, distanceX - 16, currentY, theme.colors().textSecondaryArgb());
+            ctx.drawText(Component.text("→ " + distanceText, theme.fonts().small()), distanceX - 16, currentY);
         }
         
         return ctx.textHeight() + 2;

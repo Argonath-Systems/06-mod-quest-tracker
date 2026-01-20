@@ -46,6 +46,15 @@ public interface RenderContext {
      * @param color ARGB color
      */
     void fillRect(int x, int y, int width, int height, int color);
+
+    /**
+     * Draw styled text component.
+     * 
+     * @param text The component to draw
+     * @param x X Position
+     * @param y Y Position
+     */
+    void drawText(com.argonathsystems.framework.text.Component text, int x, int y);
     
     /**
      * Draw a rectangle outline.
@@ -79,7 +88,9 @@ public interface RenderContext {
      * @param y Y position
      * @param color ARGB color
      */
-    void drawText(String text, int x, int y, int color);
+    default void drawText(String text, int x, int y, int color) {
+        drawText(com.argonathsystems.framework.text.Component.text(text, com.argonathsystems.framework.text.Style.of(com.argonathsystems.framework.text.TextColor.of(color))), x, y);
+    }
     
     /**
      * Draw text with shadow.
@@ -89,7 +100,10 @@ public interface RenderContext {
      * @param y Y position
      * @param color ARGB color
      */
-    void drawTextWithShadow(String text, int x, int y, int color);
+    default void drawTextWithShadow(String text, int x, int y, int color) {
+         // Shadow is momentarily ignored in the component migration
+        drawText(com.argonathsystems.framework.text.Component.text(text, com.argonathsystems.framework.text.Style.of(com.argonathsystems.framework.text.TextColor.of(color))), x, y);
+    }
     
     /**
      * Get the width of text when rendered.

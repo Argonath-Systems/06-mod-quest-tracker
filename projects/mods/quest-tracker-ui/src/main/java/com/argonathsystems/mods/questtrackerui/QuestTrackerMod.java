@@ -10,13 +10,13 @@ import com.argonathsystems.mods.questtrackerui.api.TrackedQuest;
 import com.argonathsystems.mods.questtrackerui.config.ConfigLoader;
 import com.argonathsystems.mods.questtrackerui.config.TrackerConfig;
 import com.argonathsystems.mods.questtrackerui.hud.QuestTrackerHUD;
-import com.argonathsystems.mods.questtrackerui.hud.RenderContext;
+// import com.argonathsystems.mods.questtrackerui.hud.RenderContext; // Removed
 import com.argonathsystems.mods.questtrackerui.notification.NotificationConfig;
 import com.argonathsystems.mods.questtrackerui.notification.QuestNotifications;
-import com.argonathsystems.mods.questtrackerui.notification.ToastRenderer;
+// import com.argonathsystems.mods.questtrackerui.notification.ToastRenderer; // Removed
 import com.argonathsystems.mods.questtrackerui.theme.Theme;
 import com.argonathsystems.mods.questtrackerui.theme.ThemeRegistry;
-import com.argonathsystems.mods.questtrackerui.waypoint.CompassRenderer;
+// import com.argonathsystems.mods.questtrackerui.waypoint.CompassRenderer; // Removed
 import com.argonathsystems.mods.questtrackerui.waypoint.WaypointConfig;
 import com.argonathsystems.mods.questtrackerui.waypoint.WaypointManager;
 
@@ -25,17 +25,15 @@ import java.nio.file.Path;
 import java.util.List;
 import java.util.UUID;
 import java.util.function.Supplier;
-
-import com.hypixel.hytale.server.core.plugin.JavaPlugin;
-import com.hypixel.hytale.server.core.plugin.JavaPluginInit;
-
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 
 /**
  * Main entry point for the Quest Tracker UI mod.
  * 
  * <p>Coordinates all components and handles lifecycle.
  */
-public class QuestTrackerMod extends JavaPlugin implements QuestUpdateListener {
+public class QuestTrackerMod implements QuestUpdateListener {
     
     public static final String MOD_ID = "quest-tracker-ui";
     public static final String MOD_NAME = "Quest Tracker UI";
@@ -56,10 +54,8 @@ public class QuestTrackerMod extends JavaPlugin implements QuestUpdateListener {
     
     // UI Components
     private QuestTrackerHUD hud;
-    private ToastRenderer toastRenderer;
     private QuestNotifications notifications;
     private WaypointManager waypointManager;
-    private CompassRenderer compassRenderer;
     
     // State
     private UUID currentPlayerId;
@@ -70,8 +66,7 @@ public class QuestTrackerMod extends JavaPlugin implements QuestUpdateListener {
     /**
      * Create the Quest Tracker mod.
      */
-    public QuestTrackerMod(JavaPluginInit init) {
-        super(init);
+    public QuestTrackerMod() {
         // Assuming config dir logic is handled via accessor or hardcoded relative to data folder
         this.configDirectory = Path.of("data", "quest-tracker"); 
         this.themeRegistry = new ThemeRegistry();
@@ -80,14 +75,6 @@ public class QuestTrackerMod extends JavaPlugin implements QuestUpdateListener {
         this.initialized = false;
     }
 
-    @Override
-    protected void setup() {
-        initialize();
-    }
-    
-    /**
-     * Initialize the mod.
-     */
     public void initialize() {
         if (initialized) {
             return;
@@ -99,21 +86,24 @@ public class QuestTrackerMod extends JavaPlugin implements QuestUpdateListener {
         
         // Load custom themes
         loadThemes();
+
+        // Register UI Definition
+        registerUI();
         
         // Initialize components
         hud = new QuestTrackerHUD(themeRegistry, trackerConfig);
-        toastRenderer = new ToastRenderer(notificationConfig, themeRegistry.getActiveTheme());
-        notifications = new QuestNotifications(toastRenderer, notificationConfig);
+        // toastRenderer = new ToastRenderer(notificationConfig, themeRegistry.getActiveTheme());
+        // notifications = new QuestNotifications(toastRenderer, notificationConfig);
         waypointManager = new WaypointManager(waypointConfig);
-        compassRenderer = new CompassRenderer(waypointConfig, themeRegistry.getActiveTheme());
+        // compassRenderer = new CompassRenderer(waypointConfig, themeRegistry.getActiveTheme());
         
         // Set up HUD distance calculator
         hud.setDistanceCalculator(this::calculateDistanceToObjective);
         
         // Listen for theme changes
         themeRegistry.addChangeListener((oldTheme, newTheme) -> {
-            toastRenderer.setTheme(newTheme);
-            compassRenderer.setTheme(newTheme);
+            // toastRenderer.setTheme(newTheme);
+            // compassRenderer.setTheme(newTheme);
         });
         
         // Register as update listener for all providers
@@ -135,6 +125,17 @@ public class QuestTrackerMod extends JavaPlugin implements QuestUpdateListener {
         }
         
         initialized = true;
+    }
+
+    private void registerUI() {
+         try (InputStream is = getClass().getResourceAsStream("/ui/quest_tracker.xaml")) {
+            if (is != null) {
+                String uiDef = new String(is.readAllBytes(), StandardCharsets.UTF_8);
+                accessorProvider.getUIAccessor().registerUI("quest_tracker", uiDef);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
     
     /**
@@ -176,37 +177,21 @@ public class QuestTrackerMod extends JavaPlugin implements QuestUpdateListener {
         
         List<TrackedQuest> pinnedQuests = providerRegistry.getAllPinnedQuests(currentPlayerId);
         hud.setPinnedQuests(pinnedQuests);
+        
+        // Update UI Layout
+        if (accessorProvider != null && accessorProvider.getUIAccessor() != null) {
+            String xamlContent = hud.generateXaml();
+            accessorProvider.getUIAccessor().sendUIUpdate(currentPlayerId, "quest_list_container", xamlContent);
+        }
+
         waypointManager.updateFromQuests(pinnedQuests);
     }
     
-    /**
-     * Render the HUD and notifications.
-     *
-     * @param ctx Render context
-     */
+    /*
     public void render(RenderContext ctx) {
-        if (!initialized) {
-            return;
-        }
-        
-        // Render main HUD
-        hud.render(ctx);
-        
-        // Render compass waypoints
-        if (playerLocationSupplier != null && playerYawSupplier != null) {
-            LocationData playerLoc = playerLocationSupplier.get();
-            float playerYaw = playerYawSupplier.get();
-            
-            if (playerLoc != null) {
-                for (var waypoint : waypointManager.getVisibleWaypoints()) {
-                    compassRenderer.render(ctx, waypoint, playerLoc, playerYaw);
-                }
-            }
-        }
-        
-        // Render toast notifications
-        toastRenderer.render(ctx);
+        // Legacy render method removed
     }
+    */
     
     /**
      * Toggle HUD visibility.

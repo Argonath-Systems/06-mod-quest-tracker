@@ -27,10 +27,10 @@ public class QuestTrackerUiLoaderPlugin extends JavaPlugin {
 
             // TODO: Instantiate the core mod with correct parameters
             // This is a generated stub. Please verify constructor arguments.
-            // coreMod = new QuestTrackerMod(accessors); 
-            getLogger().atInfo().log("Warning: Core instantiation is commented out in generated loader.");
-
-            getLogger().atInfo().log("quest-tracker-ui initialized successfully (Stub).");
+            coreMod = new QuestTrackerMod();
+            coreMod.initialize();
+            
+            getLogger().atInfo().log("quest-tracker-ui initialized successfully.");
 
         } catch (Exception e) {
             getLogger().atSevere().withCause(e).log("Failed to load quest-tracker-ui");
