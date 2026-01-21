@@ -1,0 +1,101 @@
+<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <!-- Default Modern Theme (Standard Hytale) -->
+    
+    <!-- Colors -->
+    <Color x:Key="ColorGold">#4A90E2</Color> <!-- Blue Accent instead of Gold -->
+    <Color x:Key="ColorDarkGold">#357ABD</Color>
+    <Color x:Key="ColorElvenSilver">#FFFFFF</Color>
+    <Color x:Key="ColorMordorRed">#D32F2F</Color>
+    <Color x:Key="ColorParchment">#E0E0E0</Color>
+    <Color x:Key="ColorDarkBackground">#1E1E1E</Color>
+    <Color x:Key="ColorPanelBackground">#2D2D2D</Color> 
+    <Color x:Key="ColorBorder">#3E3E3E</Color>
+
+    <!-- Brushes -->
+    <SolidColorBrush x:Key="BrushGold" Color="{StaticResource ColorGold}"/>
+    <SolidColorBrush x:Key="BrushDarkGold" Color="{StaticResource ColorDarkGold}"/>
+    <SolidColorBrush x:Key="BrushElvenSilver" Color="{StaticResource ColorElvenSilver}"/>
+    <SolidColorBrush x:Key="BrushMordorRed" Color="{StaticResource ColorMordorRed}"/>
+    <SolidColorBrush x:Key="BrushParchment" Color="{StaticResource ColorParchment}"/> <!-- Secondary Text -->
+    <SolidColorBrush x:Key="BrushDarkBackground" Color="{StaticResource ColorDarkBackground}"/>
+    <SolidColorBrush x:Key="BrushPanelBackground" Color="{StaticResource ColorPanelBackground}"/>
+    <SolidColorBrush x:Key="BrushBorder" Color="{StaticResource ColorBorder}"/>
+    <SolidColorBrush x:Key="BrushTextPrimary" Color="White"/>
+    <SolidColorBrush x:Key="BrushTextSecondary" Color="#B0B0B0"/>
+    <SolidColorBrush x:Key="BrushTextDisabled" Color="#666666"/>
+
+    <!-- Text Styles -->
+    <Style x:Key="HeaderTextStyle" TargetType="TextBlock">
+        <Setter Property="FontFamily" Value="Arial"/> <!-- Sans-serif for Modern -->
+        <Setter Property="FontSize" Value="24"/>
+        <Setter Property="FontWeight" Value="Bold"/>
+        <Setter Property="Foreground" Value="{StaticResource BrushGold}"/>
+    </Style>
+
+    <Style x:Key="SubHeaderTextStyle" TargetType="TextBlock">
+        <Setter Property="FontFamily" Value="Arial"/>
+        <Setter Property="FontSize" Value="18"/>
+        <Setter Property="FontWeight" Value="SemiBold"/>
+        <Setter Property="Foreground" Value="{StaticResource BrushTextPrimary}"/>
+    </Style>
+
+    <Style x:Key="NormalTextStyle" TargetType="TextBlock">
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="Foreground" Value="{StaticResource BrushTextPrimary}"/>
+    </Style>
+
+    <!-- Button Styles -->
+    <Style x:Key="LotRButtonStyle" TargetType="Button">
+        <Setter Property="Background" Value="#383838"/>
+        <Setter Property="Foreground" Value="White"/>
+        <Setter Property="BorderBrush" Value="#555555"/>
+        <Setter Property="BorderThickness" Value="1"/>
+        <Setter Property="Padding" Value="15,10"/>
+        <Setter Property="FontFamily" Value="Arial"/>
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Border Background="{TemplateBinding Background}" 
+                            BorderBrush="{TemplateBinding BorderBrush}" 
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="2">
+                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter Property="Background" Value="#484848"/>
+                        </Trigger>
+                        <Trigger Property="IsPressed" Value="True">
+                             <Setter Property="Background" Value="#222222"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="PrimaryButtonStyle" BasedOn="{StaticResource LotRButtonStyle}" TargetType="Button">
+        <Setter Property="Background" Value="{StaticResource BrushGold}"/>
+        <Setter Property="Foreground" Value="White"/>
+        <Setter Property="BorderBrush" Value="{StaticResource BrushDarkGold}"/>
+        <Setter Property="FontWeight" Value="SemiBold"/>
+        <Style.Triggers>
+             <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Background" Value="{StaticResource BrushDarkGold}"/>
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+    <!-- Card/Panel Styles -->
+    <Style x:Key="PanelStyle" TargetType="Border">
+        <Setter Property="Background" Value="{StaticResource BrushPanelBackground}"/>
+        <Setter Property="BorderBrush" Value="{StaticResource BrushBorder}"/>
+        <Setter Property="BorderThickness" Value="1"/>
+        <Setter Property="CornerRadius" Value="2"/>
+    </Style>
+
+</ResourceDictionary>
