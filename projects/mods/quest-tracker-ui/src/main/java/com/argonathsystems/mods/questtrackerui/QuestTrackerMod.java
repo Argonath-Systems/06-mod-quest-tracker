@@ -137,7 +137,7 @@ public class QuestTrackerMod extends JavaPlugin implements QuestUpdateListener {
     }
 
     private void registerUI() {
-         try (InputStream is = getClass().getResourceAsStream("/ui/quest_tracker.xaml")) {
+         try (InputStream is = getClass().getResourceAsStream("/ui/quest_tracker.html")) {
             if (is != null) {
                 String uiDef = new String(is.readAllBytes(), StandardCharsets.UTF_8);
                 accessorProvider.getUIAccessor().registerUI("quest_tracker", uiDef);
