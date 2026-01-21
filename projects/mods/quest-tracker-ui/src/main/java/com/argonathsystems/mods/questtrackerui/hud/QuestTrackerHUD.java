@@ -240,10 +240,59 @@ public class QuestTrackerHUD {
             }
             case ROUNDED -> ctx.fillRoundedRect(x, y, width, height, theme.borders().radius(), bgColor);
             case FANCY -> {
-                // TODO: Implement fancy border style
-                ctx.fillRoundedRect(x, y, width, height, theme.borders().radius(), bgColor);
+                drawFancyBorder(ctx, x, y, width, height, theme);
             }
         }
+    }
+    
+    /**
+     * Draw a decorative fancy border with corner accents and gradient-like effect.
+     * Creates a medieval/fantasy style border fitting for LOTR theme.
+     */
+    private void drawFancyBorder(RenderContext ctx, int x, int y, int width, int height, Theme theme) {
+        int bgColor = theme.colors().backgroundArgb();
+        int borderColor = theme.colors().borderArgb();
+        // Use quest main color (gold/primary) as the accent for decorations
+        int accentColor = theme.colors().questMainArgb();
+        int radius = theme.borders().radius();
+        int borderWidth = theme.borders().width();
+        
+        // Main background with rounded corners
+        ctx.fillRoundedRect(x, y, width, height, radius, bgColor);
+        
+        // Outer border
+        ctx.drawRect(x, y, width, height, borderColor, borderWidth);
+        
+        // Inner accent border (offset by 2 pixels)
+        int innerOffset = borderWidth + 2;
+        ctx.drawRect(x + innerOffset, y + innerOffset, 
+                     width - (innerOffset * 2), height - (innerOffset * 2), 
+                     accentColor, 1);
+        
+        // Corner decorations - small filled squares at corners for a medieval look
+        int cornerSize = 6;
+        
+        // Top-left corner
+        ctx.fillRect(x, y, cornerSize, cornerSize, accentColor);
+        // Top-right corner  
+        ctx.fillRect(x + width - cornerSize, y, cornerSize, cornerSize, accentColor);
+        // Bottom-left corner
+        ctx.fillRect(x, y + height - cornerSize, cornerSize, cornerSize, accentColor);
+        // Bottom-right corner
+        ctx.fillRect(x + width - cornerSize, y + height - cornerSize, cornerSize, cornerSize, accentColor);
+        
+        // Edge decorations - small accent marks at the center of each edge
+        int edgeMarkSize = 4;
+        int edgeMarkLength = 12;
+        
+        // Top edge mark
+        ctx.fillRect(x + (width / 2) - (edgeMarkLength / 2), y, edgeMarkLength, edgeMarkSize, accentColor);
+        // Bottom edge mark
+        ctx.fillRect(x + (width / 2) - (edgeMarkLength / 2), y + height - edgeMarkSize, edgeMarkLength, edgeMarkSize, accentColor);
+        // Left edge mark
+        ctx.fillRect(x, y + (height / 2) - (edgeMarkLength / 2), edgeMarkSize, edgeMarkLength, accentColor);
+        // Right edge mark  
+        ctx.fillRect(x + width - edgeMarkSize, y + (height / 2) - (edgeMarkLength / 2), edgeMarkSize, edgeMarkLength, accentColor);
     }
     
     /**
