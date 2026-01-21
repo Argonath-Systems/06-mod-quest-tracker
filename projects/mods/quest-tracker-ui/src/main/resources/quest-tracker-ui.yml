@@ -1,74 +1,57 @@
-# Default Quest Tracker UI Configuration
+# Quest Tracker UI Configuration
+# Reference: specs/28-quest-tracker-ui.md
+
 tracker:
-  # Position & Layout
   position:
-    anchor: TOP_RIGHT # TOP_LEFT, TOP_RIGHT, BOTTOM_LEFT, BOTTOM_RIGHT, CENTER
+    anchor: TOP_RIGHT
     offset_x: -20
     offset_y: 50
+    locked: false
 
-  size:
+  layout:
     width: 280
-    max_height: 400
-    scale: 1.0
+    row_height: 24
+    font_size: 14
+    font_family: "Hytale_Serif"
 
-  # Display Settings
   display:
     max_pinned_quests: 3
-    max_visible_objectives: 8
-    show_completed_objectives: true
-    completed_fade_seconds: 3
     show_progress_bars: true
-    show_progress_text: true
     show_distance: true
     show_timer: true
+    show_completed_objectives: true
+    
+  filtering:
+    auto_pin_new: true
+    auto_unpin_completed: true
+    priority_sorting: ["MAIN_STORY", "TIMED", "SIDE", "DISTANCE"]
 
-  # Collapse Behavior
   collapse:
     enabled: true
     default_collapsed: false
     collapse_completed: true
     collapse_during_combat: false
 
-  # Animations
-  animations:
+  immersive_mode:
     enabled: true
-    objective_complete_flash: true
-    progress_update_pulse: true
-    new_quest_slide_in: true
-    duration_ms: 300
+    hide_in_combat: false
+    hide_in_dialogue: true
+    hide_on_mount: false
+    opacity_idle: 0.8
+    opacity_active: 1.0
 
-# Theme Selection
-theme: dark-fantasy
-custom_themes_folder: themes/
+  indicators:
+    world_markers:
+      enabled: true
+      show_distance: true
+      max_distance: 2000
+      clamp_to_screen_edge: true
+    compass_bar:
+      show_quest_icons: true
+    minimap_integration: true
 
-# Notification Settings
-notifications:
-  enabled: true
-  position: TOP_CENTER
-  quest_accepted: true
-  quest_completed: true
-  objective_completed: true
-  timer_warnings: [ 300, 60, 30 ] # seconds
-  sounds: true
-
-# Waypoint Settings
-waypoints:
-  enabled: true
-  show_compass: true
-  show_world_markers: true
-  show_distance: true
-  max_render_distance: 1000
-  fade_start_distance: 800
-
-# Performance
-performance:
-  update_rate_ms: 100
-  batch_updates: true
-  lazy_render: true
-
-# Accessibility
-accessibility:
-  high_contrast_mode: false
-  colorblind_mode: none # none, deuteranopia, protanopia, tritanopia
-  screen_reader_support: false
-  text_scale: 1.0
+  accessibility:
+    colorblind_mode: "tritanopia"
+    text_scaling: 1.0
+    high_contrast_background: false
+    screen_reader_support: false

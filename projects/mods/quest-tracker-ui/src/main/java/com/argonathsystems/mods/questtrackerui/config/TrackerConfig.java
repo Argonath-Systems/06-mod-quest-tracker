@@ -2,19 +2,18 @@ package com.argonathsystems.mods.questtrackerui.config;
 
 /**
  * Complete tracker configuration.
- *
- * @param position Position configuration
- * @param size Size configuration
- * @param display Display configuration
- * @param collapse Collapse configuration
- * @param animations Animation configuration
+ * Maps to src/main/resources/quest-tracker-ui.yml
  */
 public record TrackerConfig(
     PositionConfig position,
     SizeConfig size,
     DisplayConfig display,
     CollapseConfig collapse,
-    AnimationConfig animations
+    AnimationConfig animations,
+    FilteringConfig filtering,
+    ImmersiveModeConfig immersiveMode,
+    IndicatorsConfig indicators,
+    AccessibilityConfig accessibility
 ) {
     
     /**
@@ -25,14 +24,13 @@ public record TrackerConfig(
         SizeConfig.DEFAULT,
         DisplayConfig.DEFAULT,
         CollapseConfig.DEFAULT,
-        AnimationConfig.DEFAULT
+        AnimationConfig.DEFAULT,
+        FilteringConfig.DEFAULT,
+        ImmersiveModeConfig.DEFAULT,
+        IndicatorsConfig.DEFAULT,
+        AccessibilityConfig.DEFAULT
     );
     
-    /**
-     * Create a builder starting from default configuration.
-     *
-     * @return Builder with default values
-     */
     public static Builder builder() {
         return new Builder();
     }
@@ -46,6 +44,10 @@ public record TrackerConfig(
         private DisplayConfig display = DisplayConfig.DEFAULT;
         private CollapseConfig collapse = CollapseConfig.DEFAULT;
         private AnimationConfig animations = AnimationConfig.DEFAULT;
+        private FilteringConfig filtering = FilteringConfig.DEFAULT;
+        private ImmersiveModeConfig immersiveMode = ImmersiveModeConfig.DEFAULT;
+        private IndicatorsConfig indicators = IndicatorsConfig.DEFAULT;
+        private AccessibilityConfig accessibility = AccessibilityConfig.DEFAULT;
         
         public Builder position(PositionConfig position) {
             this.position = position;
@@ -71,9 +73,32 @@ public record TrackerConfig(
             this.animations = animations;
             return this;
         }
+
+        public Builder filtering(FilteringConfig filtering) {
+            this.filtering = filtering;
+            return this;
+        }
+
+        public Builder immersiveMode(ImmersiveModeConfig immersiveMode) {
+            this.immersiveMode = immersiveMode;
+            return this;
+        }
+
+        public Builder indicators(IndicatorsConfig indicators) {
+            this.indicators = indicators;
+            return this;
+        }
+
+        public Builder accessibility(AccessibilityConfig accessibility) {
+            this.accessibility = accessibility;
+            return this;
+        }
         
         public TrackerConfig build() {
-            return new TrackerConfig(position, size, display, collapse, animations);
+            return new TrackerConfig(
+                position, size, display, collapse, animations,
+                filtering, immersiveMode, indicators, accessibility
+            );
         }
     }
 }
