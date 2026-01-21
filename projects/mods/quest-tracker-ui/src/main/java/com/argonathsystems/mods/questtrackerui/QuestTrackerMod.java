@@ -20,6 +20,9 @@ import com.argonathsystems.mods.questtrackerui.theme.ThemeRegistry;
 import com.argonathsystems.mods.questtrackerui.waypoint.WaypointConfig;
 import com.argonathsystems.mods.questtrackerui.waypoint.WaypointManager;
 
+import com.hypixel.hytale.server.core.plugin.JavaPlugin;
+import com.hypixel.hytale.server.core.plugin.JavaPluginInit;
+
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.List;
@@ -33,7 +36,7 @@ import java.nio.charset.StandardCharsets;
  * 
  * <p>Coordinates all components and handles lifecycle.
  */
-public class QuestTrackerMod implements QuestUpdateListener {
+public class QuestTrackerMod extends JavaPlugin implements QuestUpdateListener {
     
     public static final String MOD_ID = "quest-tracker-ui";
     public static final String MOD_NAME = "Quest Tracker UI";
@@ -66,7 +69,8 @@ public class QuestTrackerMod implements QuestUpdateListener {
     /**
      * Create the Quest Tracker mod.
      */
-    public QuestTrackerMod() {
+    public QuestTrackerMod(JavaPluginInit init) {
+        super(init);
         // Assuming config dir logic is handled via accessor or hardcoded relative to data folder
         this.configDirectory = Path.of("data", "quest-tracker"); 
         this.themeRegistry = new ThemeRegistry();
@@ -75,11 +79,16 @@ public class QuestTrackerMod implements QuestUpdateListener {
         this.initialized = false;
     }
 
-    public void initialize() {
+    @Override
+    public void setup() {
         if (initialized) {
             return;
         }
         this.accessorProvider = AccessorRegistry.getProvider();
+        if (this.accessorProvider == null) {
+            System.err.println("AccessorProvider is null! Aborting Quest Tracker UI setup.");
+            return;
+        }
         
         // Load configuration
         loadConfiguration();
