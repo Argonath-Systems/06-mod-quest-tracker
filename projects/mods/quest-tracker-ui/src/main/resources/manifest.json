@@ -12,8 +12,8 @@
   "ServerVersion": "*",
   "Dependencies": {
     "ArgonathSystems:AccessorApi": "*",
-    "ArgonathSystems:TextStylingLib": "*",
     "ArgonathSystems:CoreLib": "*",
+    "ArgonathSystems:TextStylingLib": "*",
     "ArgonathSystems:HytaleAdapter": "*"
   },
   "OptionalDependencies": {},
