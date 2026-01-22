@@ -137,10 +137,25 @@ public class QuestTrackerMod extends JavaPlugin implements QuestUpdateListener {
     }
 
     private void registerUI() {
-         try (InputStream is = getClass().getResourceAsStream("/ui/quest_tracker.html")) {
+         // Register HUD
+         try (InputStream is = getClass().getResourceAsStream("/ui/hud_quest_tracker.hyuiml")) {
             if (is != null) {
                 String uiDef = new String(is.readAllBytes(), StandardCharsets.UTF_8);
-                accessorProvider.getUIAccessor().registerUI("quest_tracker", uiDef);
+                accessorProvider.getUIAccessor().registerUI("hud_quest_tracker", uiDef);
+            } else {
+                System.err.println("Could not find /ui/hud_quest_tracker.hyuiml");
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        // Register Quest Book Panel
+        try (InputStream is = getClass().getResourceAsStream("/ui/quest_bookpanel.hyuiml")) {
+            if (is != null) {
+                String uiDef = new String(is.readAllBytes(), StandardCharsets.UTF_8);
+                accessorProvider.getUIAccessor().registerUI("quest_bookpanel", uiDef);
+            } else {
+                System.err.println("Could not find /ui/quest_bookpanel.hyuiml");
             }
         } catch (IOException e) {
             e.printStackTrace();
