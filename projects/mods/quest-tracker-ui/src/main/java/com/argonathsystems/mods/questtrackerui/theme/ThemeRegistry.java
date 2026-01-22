@@ -1,5 +1,7 @@
 package com.argonathsystems.mods.questtrackerui.theme;
 
+import com.argonathsystems.framework.accessorapi.ThemeAccessor;
+
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -9,6 +11,10 @@ import java.util.stream.Stream;
 
 /**
  * Registry for managing available themes.
+ * 
+ * <p>Integrates with the platform's {@link ThemeAccessor} for CSS variable resolution.
+ * The mod-specific Theme records are used for quest tracker UI styling, while the
+ * ThemeAccessor provides access to global CSS variables from the centralized theme.</p>
  */
 public class ThemeRegistry {
     
@@ -16,6 +22,7 @@ public class ThemeRegistry {
     private final ThemeLoader loader;
     private Theme activeTheme;
     private final List<ThemeChangeListener> listeners;
+    private ThemeAccessor themeAccessor;
     
     /**
      * Create a new theme registry with default themes.
@@ -31,6 +38,41 @@ public class ThemeRegistry {
         
         // Set default active theme
         this.activeTheme = Theme.DARK_FANTASY;
+    }
+    
+    /**
+     * Sets the platform ThemeAccessor for CSS variable resolution.
+     * 
+     * @param accessor The theme accessor from the accessor provider
+     */
+    public void setThemeAccessor(ThemeAccessor accessor) {
+        this.themeAccessor = accessor;
+    }
+    
+    /**
+     * Gets a CSS variable from the platform theme.
+     * 
+     * @param variableName CSS variable name (without -- prefix)
+     * @return Optional value if available
+     */
+    public Optional<String> getCSSVariable(String variableName) {
+        if (themeAccessor != null) {
+            return themeAccessor.getVariable(variableName);
+        }
+        return Optional.empty();
+    }
+    
+    /**
+     * Gets a color from the platform theme.
+     * 
+     * @param colorName Color variable name
+     * @return Optional hex color value
+     */
+    public Optional<String> getPlatformColor(String colorName) {
+        if (themeAccessor != null) {
+            return themeAccessor.getColor(colorName);
+        }
+        return Optional.empty();
     }
     
     /**

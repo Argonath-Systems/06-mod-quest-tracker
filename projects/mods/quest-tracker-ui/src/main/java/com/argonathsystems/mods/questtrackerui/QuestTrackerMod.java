@@ -2,6 +2,8 @@ package com.argonathsystems.mods.questtrackerui;
 
 import com.argonathsystems.framework.accessorapi.AccessorProvider;
 import com.argonathsystems.framework.accessorapi.AccessorRegistry;
+import com.argonathsystems.framework.accessorapi.HUDAccessor;
+import com.argonathsystems.framework.accessorapi.ThemeAccessor;
 import com.argonathsystems.framework.accessorapi.dto.LocationData;
 import com.argonathsystems.mods.questtrackerui.api.QuestDataProvider;
 import com.argonathsystems.mods.questtrackerui.api.QuestUpdateListener;
@@ -43,6 +45,8 @@ public class QuestTrackerMod extends JavaPlugin implements QuestUpdateListener {
     public static final String VERSION = "1.0.0";
     
     private AccessorProvider accessorProvider;
+    private HUDAccessor hudAccessor;
+    private ThemeAccessor themeAccessor;
     private final Path configDirectory;
     
     // Core systems
@@ -89,6 +93,13 @@ public class QuestTrackerMod extends JavaPlugin implements QuestUpdateListener {
             System.err.println("AccessorProvider is null! Aborting Quest Tracker UI setup.");
             return;
         }
+        
+        // Get specialized accessors
+        this.hudAccessor = accessorProvider.getHUDAccessor();
+        this.themeAccessor = accessorProvider.getThemeAccessor();
+        
+        // Bridge theme systems - connect mod's ThemeRegistry to platform's ThemeAccessor
+        themeRegistry.setThemeAccessor(themeAccessor);
         
         // Load configuration
         loadConfiguration();
@@ -137,11 +148,11 @@ public class QuestTrackerMod extends JavaPlugin implements QuestUpdateListener {
     }
 
     private void registerUI() {
-         // Register HUD
+         // Register HUD using HUDAccessor (persistent overlay)
          try (InputStream is = getClass().getResourceAsStream("/ui/hud_quest_tracker.hyuiml")) {
             if (is != null) {
-                String uiDef = new String(is.readAllBytes(), StandardCharsets.UTF_8);
-                accessorProvider.getUIAccessor().registerUI("hud_quest_tracker", uiDef);
+                String hudTemplate = new String(is.readAllBytes(), StandardCharsets.UTF_8);
+                hudAccessor.registerHUD("hud_quest_tracker", hudTemplate);
             } else {
                 System.err.println("Could not find /ui/hud_quest_tracker.hyuiml");
             }
@@ -149,7 +160,7 @@ public class QuestTrackerMod extends JavaPlugin implements QuestUpdateListener {
             e.printStackTrace();
         }
 
-        // Register Quest Book Panel
+        // Register Quest Book Panel using UIAccessor (modal panel)
         try (InputStream is = getClass().getResourceAsStream("/ui/quest_bookpanel.hyuiml")) {
             if (is != null) {
                 String uiDef = new String(is.readAllBytes(), StandardCharsets.UTF_8);
