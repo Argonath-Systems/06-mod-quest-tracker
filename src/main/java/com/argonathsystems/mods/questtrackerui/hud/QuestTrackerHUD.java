@@ -1,0 +1,273 @@
+package com.argonathsystems.mods.questtrackerui.hud;
+
+import com.argonathsystems.mods.questtrackerui.api.TrackedObjective;
+import com.argonathsystems.mods.questtrackerui.api.TrackedQuest;
+import com.argonathsystems.mods.questtrackerui.config.TrackerConfig;
+import com.argonathsystems.mods.questtrackerui.theme.Theme;
+import com.argonathsystems.mods.questtrackerui.theme.ThemeRegistry;
+
+import java.util.Collections;
+import java.util.List;
+import java.util.function.Function;
+
+/**
+ * Main HUD component for displaying tracked quests.
+ */
+public class QuestTrackerHUD {
+    
+    private static final int HEADER_HEIGHT = 18;
+    private static final int PADDING = 8;
+    private static final int QUEST_SPACING = 4;
+    
+    private final ThemeRegistry themeRegistry;
+    private final QuestEntryRenderer questRenderer;
+    private TrackerConfig config;
+    private boolean collapsed;
+    private boolean visible;
+    
+    // Cached state
+    private List<TrackedQuest> pinnedQuests;
+    private Function<TrackedObjective, Double> distanceCalculator;
+    
+    /**
+     * Create a new quest tracker HUD.
+     *
+     * @param themeRegistry Theme registry for active theme
+     * @param config Tracker configuration
+     */
+    public QuestTrackerHUD(ThemeRegistry themeRegistry, TrackerConfig config) {
+        this.themeRegistry = themeRegistry;
+        this.config = config;
+        this.questRenderer = new QuestEntryRenderer(themeRegistry.getActiveTheme());
+        this.collapsed = config.collapse().defaultCollapsed();
+        this.visible = true;
+        this.pinnedQuests = Collections.emptyList();
+        
+        // Listen for theme changes
+        themeRegistry.addChangeListener((oldTheme, newTheme) -> {
+            questRenderer.setTheme(newTheme);
+        });
+    }
+    
+    /**
+     * Update the configuration.
+     *
+     * @param config New configuration
+     */
+    public void setConfig(TrackerConfig config) {
+        this.config = config;
+    }
+    
+    /**
+     * Set the pinned quests to display.
+     *
+     * @param quests List of pinned quests
+     */
+    public void setPinnedQuests(List<TrackedQuest> quests) {
+        int maxQuests = config.display().maxPinnedQuests();
+        if (quests.size() > maxQuests) {
+            this.pinnedQuests = quests.subList(0, maxQuests);
+        } else {
+            this.pinnedQuests = quests;
+        }
+    }
+
+    /**
+     * Get the currently pinned quests.
+     *
+     * @return List of pinned quests
+     */
+    public List<TrackedQuest> getPinnedQuests() {
+        return pinnedQuests;
+    }
+    
+    /**
+     * Set the function for calculating distances to objectives.
+     *
+     * @param calculator Distance calculator function
+     */
+    public void setDistanceCalculator(Function<TrackedObjective, Double> calculator) {
+        this.distanceCalculator = calculator;
+    }
+    
+    /**
+     * Toggle visibility of the tracker.
+     */
+    public void toggleVisibility() {
+        this.visible = !this.visible;
+    }
+    
+    /**
+     * Set visibility of the tracker.
+     *
+     * @param visible Whether the tracker should be visible
+     */
+    public void setVisible(boolean visible) {
+        this.visible = visible;
+    }
+    
+    /**
+     * Check if the tracker is visible.
+     *
+     * @return true if visible
+     */
+    public boolean isVisible() {
+        return visible;
+    }
+    
+    /**
+     * Toggle collapsed state.
+     */
+    public void toggleCollapsed() {
+        if (config.collapse().enabled()) {
+            this.collapsed = !this.collapsed;
+        }
+    }
+    
+    /**
+     * Check if the tracker is collapsed.
+     *
+     * @return true if collapsed
+     */
+    public boolean isCollapsed() {
+        return collapsed;
+    }
+    
+    /**
+     * Render the quest tracker HUD.
+     *
+     * @param ctx Render context
+     */
+    public void render(RenderContext ctx) {
+        if (!visible || pinnedQuests.isEmpty()) {
+            return;
+        }
+        
+        Theme theme = themeRegistry.getActiveTheme();
+        
+        // Calculate dimensions
+        int width = config.size().width();
+        int contentHeight = calculateContentHeight(ctx);
+        int totalHeight = Math.min(contentHeight, config.size().maxHeight());
+        
+        // Calculate position based on anchor
+        AnchorPosition anchor = config.position().anchor();
+        int x = anchor.calculateX(ctx.screenWidth(), width, config.position().offsetX());
+        int y = anchor.calculateY(ctx.screenHeight(), totalHeight, config.position().offsetY());
+        
+        // Draw background
+        drawBackground(ctx, x, y, width, totalHeight, theme);
+        
+        // Draw header
+        int contentY = y + drawHeader(ctx, x, y, width, theme);
+        
+        // Draw quests (if not collapsed)
+        if (!collapsed) {
+            ctx.pushScissor(x, contentY, width, totalHeight - HEADER_HEIGHT);
+            drawQuests(ctx, x + PADDING, contentY, width - PADDING * 2);
+            ctx.popScissor();
+        }
+    }
+    
+    /**
+     * Draw the background panel.
+     */
+    private void drawBackground(RenderContext ctx, int x, int y, int width, int height, Theme theme) {
+        int bgColor = theme.colors().backgroundArgb();
+        
+        switch (theme.borders().style()) {
+            case NONE -> ctx.fillRect(x, y, width, height, bgColor);
+            case SOLID -> {
+                ctx.fillRect(x, y, width, height, bgColor);
+                ctx.drawRect(x, y, width, height, theme.colors().borderArgb(), theme.borders().width());
+            }
+            case ROUNDED -> ctx.fillRoundedRect(x, y, width, height, theme.borders().radius(), bgColor);
+            case FANCY -> {
+                // TODO: Implement fancy border style
+                ctx.fillRoundedRect(x, y, width, height, theme.borders().radius(), bgColor);
+            }
+        }
+    }
+    
+    /**
+     * Draw the header bar.
+     *
+     * @return Height of the header
+     */
+    private int drawHeader(RenderContext ctx, int x, int y, int width, Theme theme) {
+        // Title
+        String title = "QUEST TRACKER";
+        ctx.drawTextWithShadow(title, x + PADDING, y + 4, theme.colors().textPrimaryArgb());
+        
+        // Settings button (gear icon)
+        String settingsIcon = "⚙";
+        int settingsX = x + width - PADDING - ctx.textWidth(settingsIcon) - 16;
+        ctx.drawText(settingsIcon, settingsX, y + 4, theme.colors().textSecondaryArgb());
+        
+        // Collapse button
+        String collapseIcon = collapsed ? "+" : "−";
+        int collapseX = x + width - PADDING - ctx.textWidth(collapseIcon);
+        ctx.drawText(collapseIcon, collapseX, y + 4, theme.colors().textSecondaryArgb());
+        
+        return HEADER_HEIGHT;
+    }
+    
+    /**
+     * Draw all pinned quests.
+     */
+    private void drawQuests(RenderContext ctx, int x, int y, int width) {
+        int currentY = y;
+        int maxObjectives = config.display().maxVisibleObjectives();
+        boolean showBars = config.display().showProgressBars();
+        
+        for (TrackedQuest quest : pinnedQuests) {
+            int height = questRenderer.render(
+                ctx, quest, x, currentY, width,
+                maxObjectives, showBars, distanceCalculator
+            );
+            currentY += height + QUEST_SPACING;
+        }
+    }
+    
+    /**
+     * Calculate the total content height.
+     */
+    private int calculateContentHeight(RenderContext ctx) {
+        if (collapsed) {
+            return HEADER_HEIGHT;
+        }
+        
+        int height = HEADER_HEIGHT + PADDING;
+        int maxObjectives = config.display().maxVisibleObjectives();
+        
+        for (TrackedQuest quest : pinnedQuests) {
+            height += questRenderer.calculateHeight(ctx, quest, maxObjectives);
+            height += QUEST_SPACING;
+        }
+        
+        return height;
+    }
+    
+    /**
+     * Check if a point is within the tracker bounds.
+     *
+     * @param ctx Render context for dimensions
+     * @param mouseX Mouse X position
+     * @param mouseY Mouse Y position
+     * @return true if the point is within bounds
+     */
+    public boolean containsPoint(RenderContext ctx, int mouseX, int mouseY) {
+        if (!visible || pinnedQuests.isEmpty()) {
+            return false;
+        }
+        
+        int width = config.size().width();
+        int height = collapsed ? HEADER_HEIGHT : Math.min(calculateContentHeight(ctx), config.size().maxHeight());
+        
+        AnchorPosition anchor = config.position().anchor();
+        int x = anchor.calculateX(ctx.screenWidth(), width, config.position().offsetX());
+        int y = anchor.calculateY(ctx.screenHeight(), height, config.position().offsetY());
+        
+        return mouseX >= x && mouseX <= x + width && mouseY >= y && mouseY <= y + height;
+    }
+}
