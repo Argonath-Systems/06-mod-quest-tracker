@@ -12,7 +12,7 @@
     </parent>
 
     <groupId>com.argonathsystems.mods</groupId>
-    <artifactId>quest-tracker-ui</artifactId>
+    <artifactId>argonath-frodos-journal-mod</artifactId>
     <version>1.0.0-SNAPSHOT</version>
     <packaging>jar</packaging>
 
@@ -30,23 +30,23 @@
 
     <dependencies>
         <!-- =====================================================
-             FRAMEWORK DEPENDENCIES
-             ⚠️ ONLY accessor-api and other frameworks allowed
+             BUNDLE DEPENDENCIES (Replaces individual frameworks)
+             ⚠️ ONLY bundles allowed - NO individual frameworks
              ⚠️ NO HYTALE IMPORTS IN THIS MODULE
              ===================================================== -->
         
-        <!-- Accessor API - Platform abstraction layer -->
+        <!-- Mithril Forge - Core Bundle -->
         <dependency>
-            <groupId>com.argonathsystems.framework</groupId>
-            <artifactId>accessor-api</artifactId>
+            <groupId>com.argonathsystems.bundle</groupId>
+            <artifactId>argonath-core-bundle</artifactId>
             <version>${project.version}</version>
             <scope>provided</scope>
         </dependency>
 
-        <!-- Core Library - Shared utilities -->
+        <!-- The Fellowship - Quest Bundle -->
         <dependency>
-            <groupId>com.argonathsystems.framework</groupId>
-            <artifactId>core-lib</artifactId>
+            <groupId>com.argonathsystems.bundle</groupId>
+            <artifactId>argonath-quest-bundle</artifactId>
             <version>${project.version}</version>
             <scope>provided</scope>
         </dependency>

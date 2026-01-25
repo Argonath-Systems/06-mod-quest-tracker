@@ -1,0 +1,133 @@
+# CurseForge Project Configuration - Frodo's Journal Quest Tracker
+
+[project]
+# CurseForge project ID
+id = 1434372  # Frodo's Journal - Quest Tracker
+
+# Project slug (human-readable name in URL)
+slug = "frodos-journal"
+
+# Project type: "mod", "library", "plugin"
+type = "mod"
+
+[build]
+# JAR file location (relative to repository root)
+jar_path = "target/argonath-frodos-journal-mod-*.jar"
+
+# Version pattern to extract from pom.xml
+version_xpath = "/project/version"
+
+[release]
+# Release type: "alpha", "beta", "release"
+default_release_type = "beta"
+
+# Supported game versions
+game_versions = ["hytale-alpha-1.0"]
+
+# Dependencies (other CurseForge project IDs)
+dependencies = [
+    { id = 1434397, type = "required" },  # Mithril Forge - Core Library
+    { id = 1434400, type = "required" }   # The Fellowship - Quest System
+]
+
+# Required dependencies (mods that MUST be installed)
+required_dependencies = [1434397, 1434400]
+
+# Optional dependencies (recommended but not required)
+optional_dependencies = []
+
+[changelog]
+# Path to changelog file
+file = "CHANGELOG.md"
+
+# Pattern to find version section (regex)
+section_pattern = "## \\[{version}\\]"
+
+# Maximum changelog length (CurseForge limit: 10000 chars)
+max_length = 10000
+
+[metadata]
+# Additional tags for discoverability
+tags = ["quest", "tracker", "hud", "ui", "waypoint", "objective", "argonath", "frodo"]
+
+# Display name
+display_name = "Frodo's Journal - Quest Tracker"
+
+# Short summary
+summary = "Customizable HUD overlay for tracking quests, objectives, and waypoints"
+
+# Long description (supports Markdown)
+description = """
+## 📖 Frodo's Journal - Quest Tracker
+
+A beautifully designed quest tracking HUD inspired by Frodo's journey through Middle-earth. 
+Track your active quests, objectives, and waypoints with a customizable interface.
+
+### Features
+
+✨ **Smart HUD Display**
+- Minimalist quest tracker overlay
+- Shows active quest, objectives, and progress
+- Waypoint markers with distance tracking
+- Auto-hide when no active quests
+
+✨ **Visual Quest Designer Integration**
+- Works seamlessly with HyQuestUI editor
+- Real-time quest updates
+- Quest chain visualization
+- Objective completion animations
+
+✨ **Fully Customizable**
+- Multiple themes (Classic, Modern, Minimal)
+- Position and scale adjustable
+- YAML configuration support
+- In-game settings menu
+
+✨ **Performance Optimized**
+- Lightweight rendering (~20KB)
+- No impact on gameplay
+- Smart caching system
+
+### Requirements
+
+**Required Dependencies:**
+- Mithril Forge - Core Library
+- The Fellowship - Quest System
+
+### Installation
+
+1. Install **Mithril Forge - Core Library**
+2. Install **The Fellowship - Quest System**
+3. Install **Frodo's Journal - Quest Tracker**
+4. Launch Hytale and configure in settings
+
+### Configuration
+
+Configure via `config/argonath/quest-tracker.yml`:
+```yaml
+hud:
+  position: top-right
+  theme: classic
+  scale: 1.0
+  auto_hide: true
+```
+
+### For Developers
+
+Create quests compatible with this tracker using The Fellowship API:
+```java
+Quest quest = Quest.builder("my_quest")
+    .title("Epic Adventure")
+    .addObjective(Objective.builder("kill_10_enemies")
+        .description("Defeat 10 enemies")
+        .build())
+    .build();
+```
+
+### Links
+
+- [GitHub Repository](https://github.com/Argonath-Systems)
+- [HyQuestUI Editor](https://argonath-systems.github.io/HyQuestUI/)
+- [API Documentation](https://argonath-systems.github.io/docs/)
+- [Discord Support](https://discord.gg/argonath)
+"""
