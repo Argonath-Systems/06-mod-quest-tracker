@@ -83,7 +83,6 @@ public class QuestTrackerMod extends JavaPlugin implements QuestUpdateListener {
         this.initialized = false;
     }
 
-    @Override
     public void setup() {
         if (initialized) {
             return;
