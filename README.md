@@ -1,6 +1,18 @@
-# Standalone Mod: Quest Tracker UI
+# Quest Tracker UI
 
-> A customizable HUD overlay for tracking quests, objectives, and waypoints. Works with any quest system via a simple API. Provides the visual layer without requiring a specific quest backend.
+> **Customizable HUD overlay for tracking quests, objectives, and waypoints**
+
+[![GitHub](https://img.shields.io/badge/GitHub-Argonath--Systems-181717?logo=github)](https://github.com/Argonath-Systems/06-mod-quest-tracker)
+[![CurseForge](https://img.shields.io/badge/CurseForge-Download-orange)](https://curseforge.com/hytale/mods/quest-tracker-ui)
+[![Java](https://img.shields.io/badge/Java-25-orange?logo=openjdk)](https://openjdk.org/)
+[![License](https://img.shields.io/badge/License-Proprietary-red.svg)](../LICENSE)
+[![Status](https://img.shields.io/badge/Status-Spec%20Ready-yellow)](https://github.com/Argonath-Systems/06-mod-quest-tracker)
+
+---
+
+## 📋 Overview
+
+A customizable HUD overlay for tracking quests, objectives, and waypoints. Works with any quest system via a simple API. Provides the visual layer without requiring a specific quest backend.
 
 ---
 
@@ -722,3 +734,37 @@ Container_Boundary(mod, "Standalone Mod: Quest Tracker UI") {
 Rel(hytale, mod, "Loads")
 @enduml
 ```
+
+---
+
+## 📚 Documentation
+
+- 🌐 [**Documentation Website**](https://argonath-systems.github.io/00-Argonath-Wiki)
+- 📖 [**Quest Tracker Guide**](https://argonath-systems.github.io/00-Argonath-Wiki/docs/mods/quest-tracker.html)
+- 🎨 [**Customization Guide**](https://argonath-systems.github.io/00-Argonath-Wiki/docs/guides/quest-tracker-themes.html)
+
+## 🤝 Contributing
+
+See [CONTRIBUTING.md](../CONTRIBUTING.md) for development guidelines.
+
+## 💬 Community
+
+- 💬 [**Discord**](https://discord.gg/RK3MtpyH) - Chat and support
+- 🐛 [**Issues**](https://github.com/orgs/Argonath-Systems/issues) - Bug reports
+- 📖 [**Discussions**](https://github.com/orgs/Argonath-Systems/discussions) - Q&A
+
+## 📄 License
+
+Proprietary - Copyright © 2025 Argonath Systems. See [LICENSE](../LICENSE) for details.
+
+CurseForge monetization enabled while maintaining free access to core functionality.
+
+---
+
+<div align="center">
+
+Part of the [**Argonath Systems**](https://github.com/orgs/Argonath-Systems/) ecosystem
+
+[Documentation](https://argonath-systems.github.io/00-Argonath-Wiki) • [Discord](https://discord.gg/RK3MtpyH) • [GitHub](https://github.com/orgs/Argonath-Systems/)
+
+</div>
