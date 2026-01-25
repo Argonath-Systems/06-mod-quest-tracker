@@ -13,7 +13,7 @@
 
 **Quest Tracker UI** is a comprehensive quest management mod for Hytale that provides players with an immersive, RPG-style interface to track, manage, and complete quests. Built on the HyUI framework, it features a full-screen quest browser, detailed quest pages, real-time progress tracking, and a customizable HUD widget.
 
-Perfect for adventure servers, RPG gameplay, and story-driven experiences on the Lord of the Tales server.
+Perfect for adventure servers, RPG gameplay, and story-driven experiences on Argonath Systems servers.
 
 ## 📦 What's Included
 
@@ -255,7 +255,7 @@ Script-based objectives for unique requirements:
 
 ## 🏷️ Tags
 
-`quests` `quest-tracker` `ui` `hud` `rpg` `quest-system` `objectives` `rewards` `hytale` `lott` `lord-of-the-tales` `gameplay` `hyui` `adventure` `storytelling` `tracking`
+`quests` `quest-tracker` `ui` `hud` `rpg` `quest-system` `objectives` `rewards` `hytale` `argonath` `argonath` `gameplay` `hyui` `adventure` `storytelling` `tracking`
 
 ## 🔗 Dependencies
 
@@ -270,7 +270,7 @@ Script-based objectives for unique requirements:
 
 - [Quest Framework](https://github.com/Argonath-Systems/05-framework-quest) - Core quest system library
 - [HyUI Framework](https://github.com/Argonath-Systems/HyUI) - UI framework
-- [Lord of the Tales](https://github.com/Argonath-Systems) - Full server project
+- [Argonath Systems](https://github.com/Argonath-Systems) - Full server ecosystem
 
 ## 🌐 Links
 
@@ -355,7 +355,7 @@ We welcome contributions! See [CONTRIBUTING.md](../CONTRIBUTING.md) for:
 ## 💬 FAQ
 
 **Q: Can I use this on my own server?**  
-A: Currently, this mod is designed for the Lord of the Tales server. Contact us for licensing.
+A: Currently, this mod is designed for Argonath Systems servers. Contact us for licensing.
 
 **Q: Does this work with other quest mods?**  
 A: Yes! The Quest Framework API is extensible and can integrate with other quest systems.
