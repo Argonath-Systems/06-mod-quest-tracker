@@ -30,9 +30,16 @@
 
     <dependencies>
         <!-- =====================================================
+             HYTALE API (For plugin entry point)
+             ===================================================== -->
+        <dependency>
+            <groupId>com.hypixel.hytale</groupId>
+            <artifactId>HytaleServer-parent</artifactId>
+            <scope>provided</scope>
+        </dependency>
+
+        <!-- =====================================================
              BUNDLE DEPENDENCIES (Replaces individual frameworks)
-             ⚠️ ONLY bundles allowed - NO individual frameworks
-             ⚠️ NO HYTALE IMPORTS IN THIS MODULE
              ===================================================== -->
         
         <!-- Mithril Forge - Core Bundle -->
