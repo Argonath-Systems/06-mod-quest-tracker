@@ -3,14 +3,15 @@ package com.argonathsystems.mods.questtrackerui;
 import com.argonathsystems.framework.accessorapi.AccessorProvider;
 import com.argonathsystems.framework.accessorapi.AccessorRegistry;
 import com.argonathsystems.framework.accessorapi.dto.LocationData;
+import com.argonathsystems.framework.ui.UnifiedUIManager;
+import com.argonathsystems.framework.ui.dev.DevModeConfig;
 import com.argonathsystems.mods.questtrackerui.api.QuestDataProvider;
 import com.argonathsystems.mods.questtrackerui.api.QuestUpdateListener;
 import com.argonathsystems.mods.questtrackerui.api.TrackedObjective;
 import com.argonathsystems.mods.questtrackerui.api.TrackedQuest;
 import com.argonathsystems.mods.questtrackerui.config.ConfigLoader;
 import com.argonathsystems.mods.questtrackerui.config.TrackerConfig;
-import com.argonathsystems.mods.questtrackerui.hud.QuestTrackerHUD;
-import com.argonathsystems.mods.questtrackerui.hud.RenderContext;
+import com.argonathsystems.mods.questtrackerui.hud.HyuimlQuestTrackerHUD;
 import com.argonathsystems.mods.questtrackerui.notification.NotificationConfig;
 import com.argonathsystems.mods.questtrackerui.notification.QuestNotifications;
 import com.argonathsystems.mods.questtrackerui.notification.ToastRenderer;
@@ -23,7 +24,9 @@ import com.argonathsystems.mods.questtrackerui.waypoint.WaypointManager;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Supplier;
 
 import com.hypixel.hytale.server.core.plugin.JavaPlugin;
@@ -54,12 +57,18 @@ public class QuestTrackerMod extends JavaPlugin implements QuestUpdateListener {
     private WaypointConfig waypointConfig;
     private NotificationConfig notificationConfig;
     
-    // UI Components
-    private QuestTrackerHUD hud;
+    // UI Components (HYUIML-based)
+    private HyuimlQuestTrackerHUD hud;
     private ToastRenderer toastRenderer;
     private QuestNotifications notifications;
     private WaypointManager waypointManager;
     private CompassRenderer compassRenderer;
+    
+    // Per-player HUD tracking for refresh
+    private final Map<UUID, Object> playerHudRefs = new ConcurrentHashMap<>();
+    
+    // Hot reload support
+    private boolean devModeEnabled;
     
     // State
     private UUID currentPlayerId;
@@ -95,8 +104,19 @@ public class QuestTrackerMod extends JavaPlugin implements QuestUpdateListener {
         // Load custom themes
         loadThemes();
         
-        // Initialize components
-        hud = new QuestTrackerHUD(themeRegistry, trackerConfig);
+        // Initialize development mode for hot reload (check environment)
+        initDevMode();
+        
+        // Initialize HYUIML-based HUD components
+        hud = new HyuimlQuestTrackerHUD(themeRegistry, trackerConfig);
+        
+        // Set up template supplier for hot reload support
+        if (devModeEnabled) {
+            Supplier<String> templateSupplier = UnifiedUIManager.getInstance()
+                .createUISupplier("quest-tracker-hud", "config/ui/huds/quest-tracker-hud.hyuiml");
+            hud.setTemplateSupplier(templateSupplier);
+        }
+        
         toastRenderer = new ToastRenderer(notificationConfig, themeRegistry.getActiveTheme());
         notifications = new QuestNotifications(toastRenderer, notificationConfig);
         waypointManager = new WaypointManager(waypointConfig);
@@ -172,35 +192,65 @@ public class QuestTrackerMod extends JavaPlugin implements QuestUpdateListener {
         List<TrackedQuest> pinnedQuests = providerRegistry.getAllPinnedQuests(currentPlayerId);
         hud.setPinnedQuests(pinnedQuests);
         waypointManager.updateFromQuests(pinnedQuests);
+        
+        // Notify that HUD needs refresh (for HYUIML-based rendering)
+        onHudNeedsRefresh();
     }
     
     /**
-     * Render the HUD and notifications.
+     * Generate the current HUD HTML for HYUIML-based rendering.
+     * 
+     * <p>This replaces the old programmatic render method. Call this to get
+     * the HYUIML string, then pass it to HudBuilder.
      *
-     * @param ctx Render context
+     * @return HYUIML string for the quest tracker HUD
      */
-    public void render(RenderContext ctx) {
+    public String generateHudHtml() {
         if (!initialized) {
-            return;
+            return "<!-- Quest Tracker not initialized -->";
         }
         
-        // Render main HUD
-        hud.render(ctx);
-        
-        // Render compass waypoints
-        if (playerLocationSupplier != null && playerYawSupplier != null) {
-            LocationData playerLoc = playerLocationSupplier.get();
-            float playerYaw = playerYawSupplier.get();
-            
-            if (playerLoc != null) {
-                for (var waypoint : waypointManager.getVisibleWaypoints()) {
-                    compassRenderer.render(ctx, waypoint, playerLoc, playerYaw);
-                }
-            }
-        }
-        
-        // Render toast notifications
-        toastRenderer.render(ctx);
+        // Use template if available (hot reload), otherwise generate programmatically
+        return hud.generateFromTemplate();
+    }
+    
+    /**
+     * Called when the HUD needs to be refreshed.
+     * 
+     * <p>Override or set a callback to handle HUD refresh in the adapter layer.
+     */
+    protected void onHudNeedsRefresh() {
+        // This will be called when quest data changes
+        // The adapter layer should override or listen to refresh the actual HUD
+    }
+    
+    /**
+     * Register a player's HUD reference for refresh tracking.
+     *
+     * @param playerId Player's unique identifier
+     * @param hudRef The HUD reference from HudBuilder
+     */
+    public void registerPlayerHud(UUID playerId, Object hudRef) {
+        playerHudRefs.put(playerId, hudRef);
+    }
+    
+    /**
+     * Unregister a player's HUD reference.
+     *
+     * @param playerId Player's unique identifier
+     */
+    public void unregisterPlayerHud(UUID playerId) {
+        playerHudRefs.remove(playerId);
+    }
+    
+    /**
+     * Get the HUD reference for a player.
+     *
+     * @param playerId Player's unique identifier
+     * @return The HUD reference, or null if not registered
+     */
+    public Object getPlayerHud(UUID playerId) {
+        return playerHudRefs.get(playerId);
     }
     
     /**
@@ -277,6 +327,51 @@ public class QuestTrackerMod extends JavaPlugin implements QuestUpdateListener {
             System.out.println("Loaded " + loaded + " custom themes");
         } catch (IOException e) {
             System.err.println("Failed to load themes: " + e.getMessage());
+        }
+    }
+    
+    /**
+     * Initialize development mode for UI hot reload.
+     * 
+     * <p>Checks the ARGONATH_ENV environment variable. If not set to "production",
+     * enables hot reload for HYUIML files.
+     */
+    private void initDevMode() {
+        String env = System.getenv("ARGONATH_ENV");
+        devModeEnabled = !"production".equalsIgnoreCase(env);
+        
+        if (devModeEnabled) {
+            try {
+                // Initialize UI hot reload with config directory
+                Path uiDirectory = configDirectory.resolve("ui");
+                DevModeConfig devConfig = DevModeConfig.builder()
+                    .enabled(true)
+                    .hotReloadEnabled(true)
+                    .uiDirectory(uiDirectory)
+                    .pollIntervalMs(500)
+                    .autoRefreshPlayers(true)
+                    .logChanges(true)
+                    .build();
+                
+                UnifiedUIManager.getInstance().initDevMode(devConfig);
+                
+                // Register for reload events to refresh HUDs
+                UnifiedUIManager.getInstance().getHotReloadService().ifPresent(service -> {
+                    service.onReload(pageId -> {
+                        if ("quest-tracker-hud".equals(pageId)) {
+                            System.out.println("[Quest Tracker] Hot reload detected, refreshing HUDs...");
+                            onHudNeedsRefresh();
+                        }
+                    });
+                });
+                
+                System.out.println("[Quest Tracker] Development mode enabled - UI hot reload active");
+            } catch (Exception e) {
+                System.err.println("[Quest Tracker] Failed to initialize dev mode: " + e.getMessage());
+                devModeEnabled = false;
+            }
+        } else {
+            System.out.println("[Quest Tracker] Production mode - UI hot reload disabled");
         }
     }
     

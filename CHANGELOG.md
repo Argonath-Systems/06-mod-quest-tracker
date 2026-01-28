@@ -12,6 +12,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Core functionality implementation
 
 ### Changed
+- **BREAKING**: Migrated from programmatic UI rendering to HYUIML templates
+  - Replaced `QuestTrackerHUD.render(RenderContext)` with `HyuimlQuestTrackerHUD.generateHtml()`
+  - Old `render()` method removed in favor of template-based generation
+- Added `HyuimlQuestTrackerHUD` class for HYUIML-based HUD generation
+- Added UI hot reload support for development mode
+  - Edit HYUIML files and see changes without restart
+  - Use `/uireload quest-tracker-hud` to force reload
+- Added `quest-tracker-hud.hyuiml` template file in resources
+- Added integration with `UnifiedUIManager` for hot reload
+- Added per-player HUD tracking for targeted refresh
 
 ### Deprecated
 
