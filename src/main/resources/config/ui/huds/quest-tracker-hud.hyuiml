@@ -1,0 +1,261 @@
+<!--
+    Quest Tracker HUD Template - HYUIML
+    ====================================
+    
+    This template is processed by HyuimlQuestTrackerHUD to inject live quest data.
+    The file can be hot-reloaded during development.
+    
+    Template Variables:
+      {{$visible}}       - Whether tracker is visible
+      {{$collapsed}}     - Whether tracker is collapsed
+      {{$collapseIcon}}  - + or − based on collapsed state
+      {{$trackedCount}}  - Number of tracked quests
+      {{$maxTracked}}    - Maximum trackable quests
+      {{$colorPrimary}}  - Theme primary text color
+      {{$colorSecondary}} - Theme secondary text color
+      {{$colorBackground}} - Theme background color
+    
+    Sections:
+      {{#each trackedQuests}}...{{/each}} - Replaced with quest entries
+    
+    Command to reload:
+      /uireload quest-tracker-hud
+    
+    Author: Argonath Systems
+    Version: 1.1.0
+-->
+
+<style>
+    /* === Quest Tracker HUD Styles === */
+    
+    .hud-quest-tracker {
+        layout-mode: Top;
+        anchor-top: 80;
+        anchor-right: 20;
+        anchor-width: 300;
+        background-color: rgba(0, 0, 0, 0.75);
+        padding: 10;
+        border-radius: 4;
+    }
+    
+    .tracker-header {
+        layout-mode: Left;
+        gap: 8;
+        margin-bottom: 8;
+        padding-bottom: 6;
+        border-bottom: 1px solid rgba(100, 100, 100, 0.3);
+    }
+    
+    .tracker-title {
+        font-size: 14;
+        font-weight: bold;
+        color: #c9aa71;
+        flex-weight: 1;
+    }
+    
+    .tracker-btn {
+        anchor-width: 24;
+        anchor-height: 24;
+        font-size: 12;
+        padding: 0;
+        background-color: transparent;
+        color: #888888;
+    }
+    
+    .tracker-btn:hover {
+        color: #c9aa71;
+    }
+    
+    .tracker-content {
+        layout-mode: Top;
+        gap: 10;
+    }
+    
+    .tracker-content.collapsed {
+        visibility: hidden;
+        anchor-height: 0;
+    }
+    
+    /* Quest Entry Styles */
+    .quest-entry {
+        layout-mode: Top;
+        background-color: rgba(30, 30, 40, 0.8);
+        padding: 8;
+        gap: 4;
+        border-radius: 3;
+    }
+    
+    .quest-entry.main-quest {
+        border-left: 3px solid #ffd700;
+    }
+    
+    .quest-entry.side-quest {
+        border-left: 3px solid #87ceeb;
+    }
+    
+    .quest-entry.daily-quest {
+        border-left: 3px solid #90ee90;
+    }
+    
+    .quest-entry.weekly-quest {
+        border-left: 3px solid #dda0dd;
+    }
+    
+    .quest-entry.guild-quest {
+        border-left: 3px solid #4169e1;
+    }
+    
+    .quest-entry.timed-quest {
+        border-left: 3px solid #ff6b6b;
+    }
+    
+    .quest-entry.event-quest {
+        border-left: 3px solid #ffa500;
+    }
+    
+    .quest-header {
+        layout-mode: Left;
+        gap: 6;
+    }
+    
+    .quest-name {
+        flex-weight: 1;
+        font-size: 12;
+        font-weight: bold;
+        color: #ffffff;
+    }
+    
+    .quest-timer {
+        font-size: 10;
+        color: #ff6b6b;
+    }
+    
+    .quest-btn {
+        anchor-width: 20;
+        anchor-height: 20;
+        font-size: 10;
+        padding: 0;
+        background-color: transparent;
+        color: #666666;
+    }
+    
+    .quest-btn:hover {
+        color: #c9aa71;
+    }
+    
+    .quest-objectives {
+        layout-mode: Top;
+        padding-left: 8;
+        gap: 2;
+    }
+    
+    .objective {
+        layout-mode: Left;
+        gap: 6;
+    }
+    
+    .objective-marker {
+        anchor-width: 12;
+        font-size: 10;
+        color: #888888;
+    }
+    
+    .objective-marker.complete {
+        color: #90ee90;
+    }
+    
+    .objective-text {
+        flex-weight: 1;
+        font-size: 11;
+        color: #cccccc;
+    }
+    
+    .objective-text.complete {
+        color: #666666;
+        text-decoration: line-through;
+    }
+    
+    .objective-progress {
+        font-size: 10;
+        color: #888888;
+    }
+    
+    .objective-distance {
+        font-size: 10;
+        color: #c9aa71;
+    }
+    
+    /* Empty State */
+    .empty-state {
+        padding: 16;
+        text-align: center;
+    }
+    
+    .empty-text {
+        font-size: 12;
+        color: #888888;
+        margin-bottom: 4;
+    }
+    
+    .empty-hint {
+        font-size: 10;
+        color: #666666;
+    }
+    
+    /* Footer */
+    .tracker-footer {
+        layout-mode: Left;
+        margin-top: 8;
+        padding-top: 8;
+        border-top: 1px solid rgba(100, 100, 100, 0.3);
+    }
+    
+    .tracked-count {
+        flex-weight: 1;
+        font-size: 10;
+        color: #888888;
+    }
+    
+    .btn-add-quest {
+        font-size: 10;
+        padding: 4 8;
+        background-color: rgba(60, 60, 70, 0.8);
+        color: #cccccc;
+    }
+    
+    .btn-add-quest:hover {
+        background-color: rgba(80, 80, 90, 0.9);
+        color: #ffffff;
+    }
+</style>
+
+<!-- Quest Tracker HUD -->
+<div class="hud-quest-tracker" data-hyui-layer="overlay">
+    
+    <!-- Header -->
+    <div class="tracker-header">
+        <p class="tracker-title">📜 QUEST TRACKER</p>
+        <button id="btn-collapse" class="tracker-btn" data-hyui-tooltiptext="Toggle Collapse">
+            {{$collapseIcon}}
+        </button>
+        <button id="btn-settings" class="tracker-btn" data-hyui-tooltiptext="Settings">⚙</button>
+    </div>
+    
+    <!-- Content - Quest Entries (replaced by template processor) -->
+    <div class="tracker-content">
+        
+        {{#each trackedQuests}}
+        <!-- Quest entries are injected here by HyuimlQuestTrackerHUD -->
+        {{/each}}
+        
+    </div>
+    
+    <!-- Footer -->
+    <div class="tracker-footer">
+        <p class="tracked-count">Tracked: {{$trackedCount}}/{{$maxTracked}}</p>
+        <button id="btn-add-quest" class="btn-add-quest" data-hyui-tooltiptext="Open Quest Book">
+            + Quest
+        </button>
+    </div>
+    
+</div>
