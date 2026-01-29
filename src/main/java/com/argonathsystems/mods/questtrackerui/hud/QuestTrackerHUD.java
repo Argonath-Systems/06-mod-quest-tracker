@@ -183,8 +183,37 @@ public class QuestTrackerHUD {
             }
             case ROUNDED -> ctx.fillRoundedRect(x, y, width, height, theme.borders().radius(), bgColor);
             case FANCY -> {
-                // TODO: Implement fancy border style
-                ctx.fillRoundedRect(x, y, width, height, theme.borders().radius(), bgColor);
+                // Fancy border: Draw background with rounded corners, then overlay decorative elements
+                int radius = theme.borders().radius();
+                int borderWidth = theme.borders().width();
+                int borderColor = theme.colors().borderArgb();
+                int accentColor = theme.colors().accentArgb();
+                
+                // Draw main background with rounded corners
+                ctx.fillRoundedRect(x, y, width, height, radius, bgColor);
+                
+                // Draw outer border
+                ctx.drawRoundedRect(x, y, width, height, radius, borderColor, borderWidth);
+                
+                // Draw inner accent line (1px inset)
+                int inset = borderWidth + 1;
+                ctx.drawRoundedRect(x + inset, y + inset, width - inset * 2, height - inset * 2, 
+                    Math.max(1, radius - inset), accentColor, 1);
+                
+                // Draw corner decorations (small triangular accents)
+                int cornerSize = 6;
+                // Top-left corner
+                ctx.fillTriangle(x, y, x + cornerSize, y, x, y + cornerSize, accentColor);
+                // Top-right corner
+                ctx.fillTriangle(x + width, y, x + width - cornerSize, y, x + width, y + cornerSize, accentColor);
+                // Bottom-left corner
+                ctx.fillTriangle(x, y + height, x + cornerSize, y + height, x, y + height - cornerSize, accentColor);
+                // Bottom-right corner
+                ctx.fillTriangle(x + width, y + height, x + width - cornerSize, y + height, x + width, y + height - cornerSize, accentColor);
+                
+                // Draw title underline (decorative element below header)
+                int underlineY = y + HEADER_HEIGHT - 2;
+                ctx.fillRect(x + PADDING, underlineY, width - PADDING * 2, 1, accentColor);
             }
         }
     }

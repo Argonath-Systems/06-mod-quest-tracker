@@ -1,5 +1,5 @@
 {
-  "Group": "com.argonathsystems.mods",
+  "Group": "ArgonathSystems",
   "Name": "QuestTrackerUi",
   "Version": "1.0.0-SNAPSHOT",
   "Description": "Generated manifest for Quest Tracker Ui",
@@ -11,9 +11,9 @@
   "Website": "",
   "ServerVersion": "*",
   "Dependencies": {
-    "com.argonathsystems.mods:AccessorApi": "1.0.0-SNAPSHOT",
-    "com.argonathsystems.mods:CoreLib": "1.0.0-SNAPSHOT",
-    "com.argonathsystems.mods:HytaleAdapter": "1.0.0-SNAPSHOT"
+    "ArgonathSystems:AccessorApi": "*",
+    "ArgonathSystems:CoreLib": "*",
+    "ArgonathSystems:HytaleAdapter": "*"
   },
   "OptionalDependencies": {},
   "DisabledByDefault": false,
