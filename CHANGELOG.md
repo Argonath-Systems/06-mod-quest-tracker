@@ -8,6 +8,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- **QuestBookPageAdapter** - Quest journal UI component (2026-01-29)
+  - Moved from `02-adapter-hytale` as part of architectural remediation
+  - Quest book interface management (open/close/update)
+  - Placeholder for HyUI PageBuilder integration
+  - **Reason**: Quest book UI is quest tracker mod-specific, not generic adapter concern
 - Initial project structure
 - Core functionality implementation
 

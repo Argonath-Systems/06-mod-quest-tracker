@@ -29,16 +29,17 @@ import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Supplier;
 
-import com.hypixel.hytale.server.core.plugin.JavaPlugin;
-import com.hypixel.hytale.server.core.plugin.JavaPluginInit;
+import com.argonathsystems.adapter.api.ArgonathPlugin;
 
 
 /**
  * Main entry point for the Quest Tracker UI mod.
  * 
  * <p>Coordinates all components and handles lifecycle.
+ * 
+ * @since MIGRATION-001 - Now extends ArgonathPlugin (platform-agnostic)
  */
-public class QuestTrackerMod extends JavaPlugin implements QuestUpdateListener {
+public class QuestTrackerMod extends ArgonathPlugin implements QuestUpdateListener {
     
     public static final String MOD_ID = "quest-tracker-ui";
     public static final String MOD_NAME = "Quest Tracker UI";
@@ -79,8 +80,7 @@ public class QuestTrackerMod extends JavaPlugin implements QuestUpdateListener {
     /**
      * Create the Quest Tracker mod.
      */
-    public QuestTrackerMod(JavaPluginInit init) {
-        super(init);
+    public QuestTrackerMod() {
         this.accessorProvider = AccessorRegistry.getProvider();
         // Assuming config dir logic is handled via accessor or hardcoded relative to data folder
         this.configDirectory = Path.of("data", "quest-tracker"); 
