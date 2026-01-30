@@ -1,6 +1,6 @@
 package com.argonathsystems.mods.questtrackerui;
 
-import com.argonathsystems.adapter.hytalemodapi.HytalePluginWrapper;
+import com.argonathsystems.adapter.api.hytale.HytalePluginWrapper;
 import com.hypixel.hytale.server.core.plugin.JavaPluginInit;
 
 /**
