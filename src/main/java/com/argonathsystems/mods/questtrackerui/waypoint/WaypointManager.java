@@ -7,6 +7,7 @@ import com.argonathsystems.mods.questtrackerui.api.TrackedQuest;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Supplier;
 
 /**
@@ -105,16 +106,16 @@ public class WaypointManager {
     /**
      * Find the nearest waypoint.
      *
-     * @return Nearest waypoint, or null if none
+     * @return Optional containing nearest waypoint, or empty if none available
      */
-    public QuestWaypoint findNearest() {
+    public Optional<QuestWaypoint> findNearest() {
         if (activeWaypoints.isEmpty() || playerLocationSupplier == null) {
-            return null;
+            return Optional.empty();
         }
         
         LocationData playerLocation = playerLocationSupplier.get();
         if (playerLocation == null) {
-            return null;
+            return Optional.empty();
         }
         
         QuestWaypoint nearest = null;
@@ -128,7 +129,7 @@ public class WaypointManager {
             }
         }
         
-        return nearest;
+        return Optional.ofNullable(nearest);
     }
     
     /**

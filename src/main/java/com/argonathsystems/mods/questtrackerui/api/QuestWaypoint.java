@@ -119,12 +119,4 @@ public record QuestWaypoint(
             return String.format(Locale.ROOT, "%.0fm", distance);
         }
     }
-
-    /**
-     * @deprecated Use static {@link #formatDistance(double)} instead.
-     */
-    @Deprecated
-    public String formatDistance() {
-        return "Unknown";
-    }
 }

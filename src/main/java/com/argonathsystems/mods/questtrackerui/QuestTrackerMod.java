@@ -7,6 +7,7 @@ import com.argonathsystems.framework.ui.UnifiedUIManager;
 import com.argonathsystems.framework.ui.dev.DevModeConfig;
 import com.argonathsystems.mods.questtrackerui.api.QuestDataProvider;
 import com.argonathsystems.mods.questtrackerui.api.QuestUpdateListener;
+import com.argonathsystems.mods.questtrackerui.api.HudReference;
 import com.argonathsystems.mods.questtrackerui.api.TrackedObjective;
 import com.argonathsystems.mods.questtrackerui.api.TrackedQuest;
 import com.argonathsystems.mods.questtrackerui.config.ConfigLoader;
@@ -66,7 +67,7 @@ public class QuestTrackerMod extends ArgonathPlugin implements QuestUpdateListen
     private CompassRenderer compassRenderer;
     
     // Per-player HUD tracking for refresh
-    private final Map<UUID, Object> playerHudRefs = new ConcurrentHashMap<>();
+    private final Map<UUID, HudReference> playerHudRefs = new ConcurrentHashMap<>();
     
     // Hot reload support
     private boolean devModeEnabled;
@@ -236,9 +237,9 @@ public class QuestTrackerMod extends ArgonathPlugin implements QuestUpdateListen
      * Register a player's HUD reference for refresh tracking.
      *
      * @param playerId Player's unique identifier
-     * @param hudRef The HUD reference from HudBuilder
+     * @param hudRef The HUD reference wrapping the HudBuilder result
      */
-    public void registerPlayerHud(UUID playerId, Object hudRef) {
+    public void registerPlayerHud(UUID playerId, HudReference hudRef) {
         playerHudRefs.put(playerId, hudRef);
     }
     
@@ -257,7 +258,7 @@ public class QuestTrackerMod extends ArgonathPlugin implements QuestUpdateListen
      * @param playerId Player's unique identifier
      * @return The HUD reference, or null if not registered
      */
-    public Object getPlayerHud(UUID playerId) {
+    public HudReference getPlayerHud(UUID playerId) {
         return playerHudRefs.get(playerId);
     }
     

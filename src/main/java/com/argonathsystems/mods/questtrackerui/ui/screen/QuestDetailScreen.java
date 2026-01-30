@@ -280,10 +280,10 @@ public class QuestDetailScreen {
                 y += PROGRESS_BAR_HEIGHT + LINE_SPACING;
             }
             
-            // Distance indicator
+            // Waypoint indicator (shows label, distance calculated at runtime by HUD)
             if (objective.waypoint() != null) {
-                String distance = "→ " + objective.waypoint().formatDistance();
-                ctx.drawText(distance, textX, y, colors.questTimed());
+                String waypointInfo = "→ " + objective.waypoint().label();
+                ctx.drawText(waypointInfo, textX, y, colors.questTimed());
                 y += theme.fonts().smallSize() + LINE_SPACING;
             }
         }
