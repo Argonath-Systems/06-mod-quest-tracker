@@ -11,12 +11,11 @@
   "Website": "",
   "ServerVersion": "*",
   "Dependencies": {
-    "ArgonathSystems:AccessorApi": "*",
-    "ArgonathSystems:CoreLib": "*",
-    "ArgonathSystems:HytaleAdapter": "*"
+    "ArgonathSystems:FrameworkLoader": "*",
+    "Ellie:HyUI": "*"
   },
   "OptionalDependencies": {},
   "DisabledByDefault": false,
   "IncludesAssetPack": false,
-  "Main": "com.argonathsystems.mods.questtrackerui.QuestTrackerMod"
+  "Main": "com.argonathsystems.mods.questtrackerui.QuestTrackerWrapper"
 }
