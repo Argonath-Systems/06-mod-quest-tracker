@@ -91,6 +91,14 @@ public class QuestTrackerMod extends ArgonathPlugin implements QuestUpdateListen
     }
     
     /**
+     * Called when the plugin is enabled by the ArgonathPlugin lifecycle.
+     */
+    @Override
+    public void onEnable() {
+        initialize();
+    }
+    
+    /**
      * Initialize the mod.
      */
     public void initialize() {

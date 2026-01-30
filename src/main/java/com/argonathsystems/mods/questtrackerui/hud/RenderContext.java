@@ -189,4 +189,35 @@ public interface RenderContext {
      * Pop the current translation.
      */
     void popTranslate();
+    
+    /**
+     * Draw a rounded rectangle outline.
+     *
+     * @param x Left edge
+     * @param y Top edge
+     * @param width Width
+     * @param height Height
+     * @param radius Corner radius
+     * @param color ARGB color
+     * @param thickness Line thickness
+     */
+    default void drawRoundedRect(int x, int y, int width, int height, int radius, int color, int thickness) {
+        // Default: fall back to regular rectangle
+        drawRect(x, y, width, height, color, thickness);
+    }
+    
+    /**
+     * Draw a filled triangle.
+     *
+     * @param x1 First vertex X
+     * @param y1 First vertex Y
+     * @param x2 Second vertex X
+     * @param y2 Second vertex Y
+     * @param x3 Third vertex X
+     * @param y3 Third vertex Y
+     * @param color ARGB color
+     */
+    default void fillTriangle(int x1, int y1, int x2, int y2, int x3, int y3, int color) {
+        // Default: no-op (triangles not supported by basic rendering)
+    }
 }

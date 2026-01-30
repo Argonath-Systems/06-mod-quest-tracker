@@ -102,6 +102,15 @@ public record ColorScheme(
     }
     
     /**
+     * Get accent color as ARGB (defaults to questMain color).
+     *
+     * @return ARGB integer
+     */
+    public int accentArgb() {
+        return questMainArgb();
+    }
+    
+    /**
      * Get primary text color as ARGB.
      *
      * @return ARGB integer
