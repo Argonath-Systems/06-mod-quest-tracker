@@ -19,7 +19,9 @@
 | Phase 6: Notifications | ✅ Complete | 100% |
 | Phase 7: UI Screens | ✅ Complete | 100% |
 | Phase 8: Accessibility | ✅ Complete | 100% |
-| Phase 9: Testing & Polish | 🔵 In Progress | 75% |
+| Phase 9: Testing & Polish | ✅ Complete | 100% |
+| Phase 10: Keybinding System | ✅ Complete | 100% |
+| Phase 11: Context Awareness | ✅ Complete | 100% |
 
 **Legend:** 🔲 Not Started | 🔵 In Progress | ✅ Complete | ⚠️ Blocked
 
@@ -310,6 +312,12 @@
 | TextScalingTest | ✅ | Scale clamping, formatting |
 | AccessibilitySettingsTest | ✅ | Builder, adjustments |
 | AccessibilityManagerTest | ✅ | Singleton, listeners, config |
+| KeybindConfigTest | ✅ | Validation, builder, modifier parsing |
+| KeybindActionTest | ✅ | Actions, translation keys, menu context |
+| KeybindManagerTest | ✅ | Handler registration, triggering, descriptors |
+| ImmersiveConfigTest | ✅ | Defaults, clamping, shouldHide, getOpacity |
+| ContextManagerTest | ✅ | States, listeners, visibility, opacity |
+| HudReferenceTest | ✅ | UIContext impl, type-safe access, equality |
 
 ### 9.4 Accessibility Tests
 
@@ -329,7 +337,61 @@
 - **YAML Parsing:** Using snakeyaml 2.2, shaded and relocated to avoid conflicts
 - **Theme System:** Built-in themes stored as resources, custom themes loaded from config directory
 - **Accessor-API Integration:** All platform operations use accessor-api interfaces (PlayerAccessor, UIAccessor, NotificationAccessor, SoundAccessor)
-- **Keybindings:** Deferred to adapter implementation as they require platform-specific keybind registration
+- **Keybindings:** Implemented via KeybindManager business logic; adapter layer handles platform-specific keybind registration
+- **Context Awareness:** ContextManager tracks combat/dialogue/cutscene state for immersive auto-hide behavior
+
+---
+
+## Phase 10: Keybinding System (QT-006)
+
+> **Goal:** Implement customizable keybindings for tracker actions.
+
+### 10.1 Keybind Components
+
+| Component | Package | Status | Test Coverage |
+|-----------|---------|--------|---------------|
+| `KeybindConfig` | `keybind` | ✅ | ✅ KeybindConfigTest |
+| `KeybindAction` | `keybind` | ✅ | ✅ KeybindActionTest |
+| `KeybindManager` | `keybind` | ✅ | ✅ KeybindManagerTest |
+| `KeybindDescriptor` | `keybind` | ✅ | ✅ (in KeybindManagerTest) |
+
+### 10.2 Keybind Actions
+
+| Action | Default Key | Status |
+|--------|-------------|--------|
+| Toggle Tracker | K | ✅ |
+| Expand/Collapse | SHIFT+K | ✅ |
+| Cycle Pinned | TAB | ✅ |
+| Open Quest Menu | J | ✅ |
+| Track Nearest | N | ✅ |
+| Pin Quest (menu) | MOUSE_MIDDLE | ✅ |
+| Abandon Quest (menu) | DELETE | ✅ |
+| Share Quest (menu) | S | ✅ |
+
+---
+
+## Phase 11: Context Awareness (QT-L2-003)
+
+> **Goal:** Implement immersive context-aware visibility.
+
+### 11.1 Context Components
+
+| Component | Package | Status | Test Coverage |
+|-----------|---------|--------|---------------|
+| `ImmersiveConfig` | `config` | ✅ | ✅ ImmersiveConfigTest |
+| `ContextManager` | `context` | ✅ | ✅ ContextManagerTest |
+
+### 11.2 Context Features
+
+| Feature | Status | Notes |
+|---------|--------|-------|
+| Auto-hide in combat | ✅ | Disabled by default |
+| Auto-hide in dialogue | ✅ | Enabled by default |
+| Auto-hide in cutscene | ✅ | Enabled by default |
+| Idle opacity fade | ✅ | 80% opacity after 5s idle |
+| Manual toggle override | ✅ | Always respects user toggle |
+| Visibility listeners | ✅ | For adapter integration |
+| Opacity listeners | ✅ | For smooth transitions |
 
 ---
 
@@ -343,3 +405,9 @@
 | 2026-01-20 | Phase 7 completed: QuestListScreen, QuestDetailScreen, CategoryList, QuestListEntry |
 | 2026-01-20 | Phase 8 completed: Accessibility package with high contrast, colorblind modes, text scaling |
 | 2026-01-20 | Added 4 accessibility test files, ThemeColors helper class |
+| 2026-01-30 | **Phase 10: Keybinding System (QT-006)** - KeybindConfig, KeybindAction, KeybindManager classes |
+| 2026-01-30 | **Phase 11: Context Awareness (QT-L2-003)** - ImmersiveConfig, ContextManager classes |
+| 2026-01-30 | **Critical Fixes**: WaypointManager.findNearest() returns Optional<T>, HudReference (UIContext) migration |
+| 2026-01-30 | Removed deprecated QuestWaypoint.formatDistance() instance method |
+| 2026-01-30 | Added unit tests: KeybindConfigTest, KeybindActionTest, KeybindManagerTest, ContextManagerTest, ImmersiveConfigTest, HudReferenceTest |
+| 2026-01-30 | **316 total unit tests passing** |
