@@ -39,21 +39,15 @@
         </dependency>
 
         <!-- =====================================================
-             BUNDLE DEPENDENCIES (Replaces individual frameworks)
+             BUNDLE DEPENDENCIES
+             Core Bundle contains ALL layer 1-5 frameworks including
+             quest, condition, objective, npc, ui, etc.
              ===================================================== -->
         
-        <!-- Mithril Forge - Core Bundle -->
+        <!-- Mithril Forge - Core Bundle (includes all frameworks) -->
         <dependency>
             <groupId>com.argonathsystems.bundle</groupId>
             <artifactId>argonath-core-bundle</artifactId>
-            <version>${project.version}</version>
-            <scope>provided</scope>
-        </dependency>
-
-        <!-- The Fellowship - Quest Bundle -->
-        <dependency>
-            <groupId>com.argonathsystems.bundle</groupId>
-            <artifactId>argonath-quest-bundle</artifactId>
             <version>${project.version}</version>
             <scope>provided</scope>
         </dependency>
