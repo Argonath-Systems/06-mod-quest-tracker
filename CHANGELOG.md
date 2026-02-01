@@ -8,6 +8,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- **Command Registration (2026-02-01)** - Quest tracking commands
+  - `/quest list|log` - Show all active quests with objectives
+  - `/quest track <id>` - Track a specific quest in HUD
+  - `/quest untrack <id>` - Stop tracking a quest
+  - `/quest toggle` - Toggle tracker visibility
+  - `/questlog` - Alias for `/quest list`
+  - `/qtrack` - Quick toggle for tracker visibility
+
+### Added (Previous)
 - **Keybinding System (QT-006)** - Full keybind framework (2026-01-30)
   - `KeybindConfig` record with default keybindings per specification
   - `KeybindAction` enum for all keybind actions (toggle, expand, cycle, menu, etc.)

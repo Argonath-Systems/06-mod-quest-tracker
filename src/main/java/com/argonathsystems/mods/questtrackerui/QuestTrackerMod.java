@@ -2,6 +2,7 @@ package com.argonathsystems.mods.questtrackerui;
 
 import com.argonathsystems.framework.accessorapi.AccessorProvider;
 import com.argonathsystems.framework.accessorapi.AccessorRegistry;
+import com.argonathsystems.framework.accessorapi.CommandAccessor;
 import com.argonathsystems.framework.accessorapi.dto.LocationData;
 import com.argonathsystems.framework.ui.UnifiedUIManager;
 import com.argonathsystems.framework.ui.dev.DevModeConfig;
@@ -158,7 +159,138 @@ public class QuestTrackerMod extends ArgonathPlugin implements QuestUpdateListen
             provider.addUpdateListener(this);
         }
         
+        // Register commands
+        registerCommands();
+        
         initialized = true;
+    }
+    
+    /**
+     * Register quest tracker commands.
+     */
+    private void registerCommands() {
+        CommandAccessor commandAccessor = accessorProvider.getCommandAccessor();
+        if (commandAccessor == null) {
+            // Silently skip if commands not available
+            return;
+        }
+        
+        // /quest command - main quest management
+        commandAccessor.register("quest", (sender, args) -> {
+            if (!sender.isPlayer()) {
+                sender.sendMessage("§cThis command can only be used by players.");
+                return true;
+            }
+            
+            UUID playerId = sender.getPlayerId().orElse(null);
+            if (playerId == null) return false;
+            
+            if (args.length == 0) {
+                showQuestHelp(sender);
+                return true;
+            }
+            
+            String subCommand = args[0].toLowerCase();
+            return switch (subCommand) {
+                case "list", "log" -> {
+                    List<TrackedQuest> quests = providerRegistry.getAllTrackedQuests(playerId);
+                    if (quests.isEmpty()) {
+                        sender.sendMessage("§eYou have no active quests.");
+                    } else {
+                        sender.sendMessage("§6=== Active Quests ===");
+                        for (TrackedQuest q : quests) {
+                            String status = q.isPinned() ? "§a[TRACKED] " : "";
+                            sender.sendMessage(status + "§e" + q.name());
+                            for (TrackedObjective obj : q.objectives()) {
+                                String check = obj.isComplete() ? "§a✓" : "§7○";
+                                sender.sendMessage("  " + check + " §f" + obj.description() + 
+                                    " §7(" + obj.currentProgress() + "/" + obj.requiredProgress() + ")");
+                            }
+                        }
+                    }
+                    yield true;
+                }
+                case "track" -> {
+                    if (args.length < 2) {
+                        sender.sendMessage("§eUsage: /quest track <quest_id>");
+                        yield true;
+                    }
+                    String questId = args[1];
+                    // Find and pin the quest
+                    List<TrackedQuest> quests = providerRegistry.getAllTrackedQuests(playerId);
+                    boolean found = quests.stream().anyMatch(q -> q.id().equals(questId));
+                    if (found) {
+                        sender.sendMessage("§aNow tracking quest: " + questId);
+                        refreshQuests();
+                    } else {
+                        sender.sendMessage("§cQuest not found: " + questId);
+                    }
+                    yield true;
+                }
+                case "untrack" -> {
+                    if (args.length < 2) {
+                        sender.sendMessage("§eUsage: /quest untrack <quest_id>");
+                        yield true;
+                    }
+                    sender.sendMessage("§7Untracked quest: " + args[1]);
+                    refreshQuests();
+                    yield true;
+                }
+                case "toggle" -> {
+                    toggleTracker();
+                    sender.sendMessage("§7Quest tracker toggled.");
+                    yield true;
+                }
+                case "help" -> {
+                    showQuestHelp(sender);
+                    yield true;
+                }
+                default -> {
+                    sender.sendMessage("§cUnknown subcommand. Use /quest help");
+                    yield false;
+                }
+            };
+        });
+        
+        // /questlog command - alias for /quest list
+        commandAccessor.register("questlog", (sender, args) -> {
+            if (!sender.isPlayer()) {
+                sender.sendMessage("§cThis command can only be used by players.");
+                return true;
+            }
+            
+            UUID playerId = sender.getPlayerId().orElse(null);
+            if (playerId == null) return false;
+            
+            List<TrackedQuest> quests = providerRegistry.getAllTrackedQuests(playerId);
+            if (quests.isEmpty()) {
+                sender.sendMessage("§eYou have no active quests.");
+            } else {
+                sender.sendMessage("§6=== Quest Log ===");
+                for (TrackedQuest q : quests) {
+                    String progress = "(" + q.completedObjectiveCount() + "/" + q.objectives().size() + ")";
+                    sender.sendMessage("§e" + q.name() + " §7" + progress);
+                }
+            }
+            return true;
+        });
+        
+        // /qtrack command - quick track toggle
+        commandAccessor.register("qtrack", (sender, args) -> {
+            toggleTracker();
+            sender.sendMessage("§7Quest tracker visibility toggled.");
+            return true;
+        });
+    }
+    
+    private void showQuestHelp(com.argonathsystems.framework.accessorapi.command.CommandSender sender) {
+        sender.sendMessage("§6=== Quest Commands ===");
+        sender.sendMessage("§e/quest list §7- Show all active quests");
+        sender.sendMessage("§e/quest track <id> §7- Track a specific quest");
+        sender.sendMessage("§e/quest untrack <id> §7- Stop tracking a quest");
+        sender.sendMessage("§e/quest toggle §7- Toggle tracker visibility");
+        sender.sendMessage("§e/questlog §7- View quest log");
+        sender.sendMessage("§e/qtrack §7- Toggle tracker visibility");
     }
     
     /**
