@@ -6,6 +6,8 @@ import com.argonathsystems.framework.accessorapi.CommandAccessor;
 import com.argonathsystems.framework.accessorapi.dto.LocationData;
 import com.argonathsystems.framework.ui.UnifiedUIManager;
 import com.argonathsystems.framework.ui.dev.DevModeConfig;
+import com.argonathsystems.framework.ui.menu.MainMenuManager;
+import com.argonathsystems.framework.ui.menu.MenuTab;
 import com.argonathsystems.mods.questtrackerui.api.QuestDataProvider;
 import com.argonathsystems.mods.questtrackerui.api.QuestUpdateListener;
 import com.argonathsystems.mods.questtrackerui.api.HudReference;
@@ -162,7 +164,24 @@ public class QuestTrackerMod extends ArgonathPlugin implements QuestUpdateListen
         // Register commands
         registerCommands();
         
+        // Register quests tab handler with MainMenuManager
+        registerQuestsTabHandler();
+        
         initialized = true;
+    }
+    
+    /**
+     * Register the quests tab handler with the main menu system.
+     */
+    private void registerQuestsTabHandler() {
+        try {
+            com.argonathsystems.mods.questtrackerui.menu.QuestsTabHandler questsHandler = 
+                new com.argonathsystems.mods.questtrackerui.menu.QuestsTabHandler(providerRegistry, themeRegistry);
+            MainMenuManager.getInstance().registerTabHandler(MenuTab.QUESTS, questsHandler);
+            System.out.println("[Quest Tracker] Registered QuestsTabHandler for main menu");
+        } catch (Exception e) {
+            System.err.println("[Quest Tracker] Failed to register quests tab handler: " + e.getMessage());
+        }
     }
     
     /**
@@ -241,6 +260,27 @@ public class QuestTrackerMod extends ArgonathPlugin implements QuestUpdateListen
                     sender.sendMessage("§7Quest tracker toggled.");
                     yield true;
                 }
+                case "editor", "design", "designer" -> {
+                    // Redirect to the Quest Designer mod's command
+                    // The Quest Designer is a separate tool with its own command registration
+                    sender.sendMessage("§6Quest Designer");
+                    sender.sendMessage("§7Use one of the following commands to open the Quest Designer:");
+                    sender.sendMessage("  §f/quest-designer §7or §f/qdesigner §7- Open the designer");
+                    sender.sendMessage("  §f/quest-designer open §7- Open specific quest by ID");
+                    sender.sendMessage("  §f/quest-designer new §7- Create a new quest");
+                    sender.sendMessage("  §f/quest-designer list §7- List all quests");
+                    yield true;
+                }
+                case "menu", "journal", "book" -> {
+                    // Open the quest menu tab via MainMenuManager
+                    try {
+                        MainMenuManager.getInstance().openMenu(playerId, MenuTab.QUESTS);
+                    } catch (Exception e) {
+                        sender.sendMessage("§7Opening Quest Menu...");
+                        sender.sendMessage("§cNote: Main menu not fully initialized. Try §f/quests §cor §f/menu quests");
+                    }
+                    yield true;
+                }
                 case "help" -> {
                     showQuestHelp(sender);
                     yield true;
@@ -289,8 +329,14 @@ public class QuestTrackerMod extends ArgonathPlugin implements QuestUpdateListen
         sender.sendMessage("§e/quest track <id> §7- Track a specific quest");
         sender.sendMessage("§e/quest untrack <id> §7- Stop tracking a quest");
         sender.sendMessage("§e/quest toggle §7- Toggle tracker visibility");
+        sender.sendMessage("§e/quest menu §7- Open quest menu UI");
+        sender.sendMessage("§e/quest editor §7- Open quest designer (admin)");
+        sender.sendMessage("");
+        sender.sendMessage("§7Shortcuts:");
+        sender.sendMessage("§e/quests §7- Open quest menu (shortcut)");
         sender.sendMessage("§e/questlog §7- View quest log");
         sender.sendMessage("§e/qtrack §7- Toggle tracker visibility");
+        sender.sendMessage("§e/quest-designer §7- Open quest editor (admin)");
     }
     
     /**
